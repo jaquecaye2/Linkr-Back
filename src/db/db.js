@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const user = 'postgres';
-const password = 23052003;
+const password = process.env.DB_PASSWORD;
 const host = 'localhost';
 const port = 5432;
 const database = 'linkr';
