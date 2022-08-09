@@ -10,9 +10,7 @@ export async function hastag(req,res){
         }
 
        const { rows : postHastag } =  await hastagRepository.redirectHastag(newHastag)
-        console.log(postHastag)
-        
-
+    
         res.status(200).send(postHastag)
     }catch(e){
         console.log(e)
