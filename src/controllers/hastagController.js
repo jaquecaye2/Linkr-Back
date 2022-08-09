@@ -8,11 +8,11 @@ export async function hastag(req,res){
            return res.status(404).send("hastag Not Found")
         }
 
-        const redirectHastag = await hastagRepository.redirectHastag(hastag)
-        console.log(redirectHastag)
+       const { rows : postHastag } =  await hastagRepository.redirectHastag(hastag)
+        console.log(postHastag)
         
 
-        res.status(200).send("ok")
+        res.status(200).send(postHastag)
     }catch(e){
         console.log(e)
         res.status(500).send("erro na hastag")
