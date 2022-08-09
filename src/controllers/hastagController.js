@@ -2,13 +2,14 @@ import hastagRepository from "../repositories /hastagRepository.js"
 
 export async function hastag(req,res){
     const { hastag } = req.params;
+    const newHastag = hastag?.replace("#", "").trim();
     try{
-        const  findHastag =  await hastagRepository.findHastag(hastag)
+        const  findHastag =  await hastagRepository.findHastag(newHastag)
         if(findHastag.rowCount == 0){
            return res.status(404).send("hastag Not Found")
         }
 
-       const { rows : postHastag } =  await hastagRepository.redirectHastag(hastag)
+       const { rows : postHastag } =  await hastagRepository.redirectHastag(newHastag)
         console.log(postHastag)
         
 
