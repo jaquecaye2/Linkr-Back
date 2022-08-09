@@ -1,12 +1,14 @@
 import { Router } from "express";
-import { cratePost,  showPosts } from "../controllers/postController.js";
+import { createPost,  showPosts } from "../controllers/postController.js";
 import schemaValidator from "../middlewares/schemaValidator.js";
 //import validateUser from "../middlewares/validateUser.js";
 import postSchema from "../schemas/postSchema.js";
 
 const router = Router();
 
-router.post("/post", schemaValidator(postSchema), cratePost);
+// adicionar a validação do usuário em todas as rotas
+
+router.post("/post", schemaValidator(postSchema), createPost);
 
 router.get("/post", showPosts)
 

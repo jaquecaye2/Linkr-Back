@@ -22,7 +22,7 @@ CREATE TABLE "sessions" (
 CREATE TABLE "posts" (
 	"id" SERIAL PRIMARY KEY,
 	"link" TEXT NOT NULL,
-	"description" TEXT,
+	"description" TEXT DEFAULT NULL,
 	"user_id" INTEGER NOT NULL REFERENCES "users"("id"),
 	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
 );
