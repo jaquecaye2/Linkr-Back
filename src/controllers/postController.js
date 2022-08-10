@@ -5,7 +5,7 @@ export async function createPost(request, response) {
   try {
     //const idUser = response.locals.idUser;
 
-    const idUser = 2;
+    const idUser = 1;
 
     let infoPost = request.body;
 
@@ -17,16 +17,14 @@ export async function createPost(request, response) {
 
     await urlMetadata(`${infoPost.link}`).then(
       function (metadata) {
-        // success handler
         linkMetadata = metadata
       },
       function (error) {
-        // failure handler
         console.log(error);
       }
     );
 
-    // inserir isto e um repository
+    // inserir isto em um repository
     await connection.query(
       "INSERT INTO posts (link, description, link_title, link_description, link_image, user_id) VALUES ($1, $2, $3, $4, $5, $6)",
       [infoPost.link, infoPost.description, linkMetadata.title, linkMetadata.description, linkMetadata.image, idUser]
@@ -42,7 +40,7 @@ export async function showPosts(request, response) {
   try {
     // inserir isto e um repository
     const { rows: posts } = await connection.query(
-      "SELECT posts.id, name, picture, link, description FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.created_at DESC LIMIT 20"
+      "SELECT posts.id, name, picture, description, link_title, link_description, link_image, link FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.created_at DESC LIMIT 20"
     );
 
     if (posts.length === 0) {
