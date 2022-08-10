@@ -17,11 +17,18 @@ async function redirectHastag(hastag) {
 }
 
 
+async function updateView(sum,hastag) {
+  return db.query(`
+  UPDATE hastags 
+  SET views = $1
+  WHERE name ILIKE $2
+  `, [sum,`%${hastag}%`]);
+}
+
 const hastagRepository = {
     findHastag,
     redirectHastag,
-
-
+    updateView
 }
 
 export default hastagRepository;
