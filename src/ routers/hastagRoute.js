@@ -3,6 +3,7 @@ import { hastag } from "../controllers/hastagController.js";
 
 const hastagRoute = Router();
 
-hastagRoute.use("/hastag/:hastag", hastag)
+hastagRoute.get("/hastag/:hastag", hastag)
+
 
 export default hastagRoute
