@@ -25,10 +25,19 @@ async function updateView(sum,hastag) {
   `, [sum,`%${hastag}%`]);
 }
 
+async function rankingHastags(sum,hastag) {
+  return db.query(`
+  SELECT h.name FROM hastags h 
+  GROUP BY h.id
+  ORDER BY views DESC
+  `, []);
+}
+
 const hastagRepository = {
     findHastag,
     redirectHastag,
-    updateView
+    updateView,
+    rankingHastags
 }
 
 export default hastagRepository;

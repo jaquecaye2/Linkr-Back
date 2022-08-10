@@ -18,7 +18,7 @@ export async function hastag(req,res){
     }
 }
 
-export async function rankingHastag(req,res){
+export async function updateHastagView(req,res){
     const { hastag } = req.params;
     try{
         const  findHastag =  await hastagRepository.findHastag(hastag)
@@ -33,5 +33,16 @@ export async function rankingHastag(req,res){
         res.status(500).send("erro na hastag")
     }
 }
+
+export async function rankingHastags(req,res){
+    try{
+        const { rows : rankig} = await hastagRepository.rankingHastags()
+        res.status(200).send(rankig)
+    }catch(e){
+        console.log(e)
+        res.status(500).send("erro na hastag")
+    }
+}
+
 
 
