@@ -2,16 +2,16 @@ import express, {json} from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import postRouter from "./routers/postRouter.js";
+import router from "./routers/index.js";
 
 dotenv.config();
 
 const server = express();
 
-server.use(express.json());
+server.use(json());
 server.use(cors());
 
-server.use(postRouter)
+server.use(router)
 
 const port = process.env.PORT || 5007
 server.listen(port ,()=>{
