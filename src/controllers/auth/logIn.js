@@ -8,6 +8,10 @@ export async function logIn(req, res){
 
     try{
         let {rows: user} = await authRepository.getUser(email)
+
+        if(user.length===0){
+            return  res.status(401).send("email or password incorrect");
+        }
         user = user[0]
 
         const passwordVerify = bcrypt.compareSync(password, user.password_hash)
