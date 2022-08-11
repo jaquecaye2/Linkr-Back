@@ -4,9 +4,7 @@ import postRepository from "../repositories/postRepository.js"
 
 export async function createPost(request, response) {
   try {
-    //const idUser = response.locals.idUser;
-
-    const idUser = 1;
+    const idUser = response.locals.idUser;
 
     let infoPost = request.body;
 
