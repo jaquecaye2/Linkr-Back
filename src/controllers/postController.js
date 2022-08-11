@@ -1,5 +1,6 @@
-import connection from "../db/db.js";
 import urlMetadata from "url-metadata";
+
+import postRepository from "../repositories/postRepository.js"
 
 export async function createPost(request, response) {
   try {
@@ -24,11 +25,7 @@ export async function createPost(request, response) {
       }
     );
 
-    // inserir isto em um repository
-    await connection.query(
-      "INSERT INTO posts (link, description, link_title, link_description, link_image, user_id) VALUES ($1, $2, $3, $4, $5, $6)",
-      [infoPost.link, infoPost.description, linkMetadata.title, linkMetadata.description, linkMetadata.image, idUser]
-    );
+    await postRepository.createPost(infoPost, linkMetadata, idUser)
 
     response.status(201).send();
   } catch (error) {
@@ -38,13 +35,11 @@ export async function createPost(request, response) {
 
 export async function showPosts(request, response) {
   try {
-    // inserir isto e um repository
-    const { rows: posts } = await connection.query(
-      "SELECT posts.id, name, picture, description, link_title, link_description, link_image, link FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.created_at DESC LIMIT 20"
-    );
+    const { rows: posts } = await postRepository.showPosts()
 
     if (posts.length === 0) {
       response.status(204).send("There are no posts yet");
+      return
     }
 
     response.status(201).send(posts);
