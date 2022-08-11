@@ -8,17 +8,6 @@ CREATE TABLE "users" (
 );
 
 
-
-CREATE TABLE "sessions" (
-	"id" SERIAL PRIMARY KEY,
-	"user_id" INTEGER NOT NULL REFERENCES "users"("id"),
-	"token" TEXT NOT NULL UNIQUE,
-	"expire" TEXT NOT NULL,
-	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-
-
 CREATE TABLE "posts" (
 	"id" SERIAL PRIMARY KEY,
 	"link" TEXT NOT NULL,
@@ -40,8 +29,7 @@ CREATE TABLE "hastags" (
 CREATE TABLE "posts_hastgs" (
 	"id" SERIAL PRIMARY KEY,
 	"post_id" INTEGER NOT NULL REFERENCES "posts"("id"),
-	"hastag_id" INTEGER NOT NULL REFERENCES "hastags"("id"),
-	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
+	"hastag_id" INTEGER NOT NULL REFERENCES "hastags"("id")
 );
 
 
@@ -57,6 +45,5 @@ CREATE TABLE "likes" (
 CREATE TABLE "likes_posts" (
 	"id" SERIAL PRIMARY KEY,
 	"post_id" INTEGER NOT NULL REFERENCES "posts"("id"),
-	"likes_id" INTEGER NOT NULL REFERENCES "likes"("id"),
-	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
+	"likes_id" INTEGER NOT NULL REFERENCES "likes"("id")
 );
