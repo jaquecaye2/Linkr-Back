@@ -11,7 +11,10 @@ CREATE TABLE "users" (
 CREATE TABLE "posts" (
 	"id" SERIAL PRIMARY KEY,
 	"link" TEXT NOT NULL,
-	"description" TEXT,
+	"description" TEXT DEFAULT NULL,
+	"link_title" TEXT NOT NULL,
+	"link_description" TEXT,
+	"link_image" TEXT NOT NULL,
 	"user_id" INTEGER NOT NULL REFERENCES "users"("id"),
 	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -21,7 +24,8 @@ CREATE TABLE "posts" (
 CREATE TABLE "hastags" (
 	"id" SERIAL PRIMARY KEY,
 	"name" TEXT NOT NULL UNIQUE,
-	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
+	"created_at" TIMESTAMP NOT NULL DEFAULT NOW(),
+	"views" INTEGER DEFAULT 0
 );
 
 
