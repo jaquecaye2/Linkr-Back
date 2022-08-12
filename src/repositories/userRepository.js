@@ -13,4 +13,31 @@ async function getUsersWithName(name) {
   return users;
 }
 
-export default { getUsersWithName };
+async function getUsersWithId(id) {
+  const { rows: users } = await db.query(
+    `
+    SELECT u.id, u.name, p.link, u.picture, p.description, p.id AS post_id
+    FROM users u
+    JOIN posts P ON p.user_id = u.id
+    WHERE u.id = $1
+  `,
+    [id]
+  );
+
+  return users;
+}
+
+
+async function verifyUserId(id) {
+  const { rows: isUserExistent } = await db.query(
+    `
+    SELECT * FROM users WHERE id = $1
+  `,
+    [id]
+  );
+
+  return isUserExistent;
+}
+
+
+export default { getUsersWithName,getUsersWithId,verifyUserId };
