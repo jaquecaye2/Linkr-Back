@@ -1,8 +1,8 @@
-import connection from "../db/db.js";
+import db from "../db/db.js";
 
 async function createPost(infoPost, linkMetadata, idUser) {
   try {
-    return await connection.query(
+    return await db.query(
       "INSERT INTO posts (link, description, link_title, link_description, link_image, user_id) VALUES ($1, $2, $3, $4, $5, $6)",
       [
         infoPost.link,
@@ -20,7 +20,7 @@ async function createPost(infoPost, linkMetadata, idUser) {
 
 async function showPosts() {
   try {
-    return await connection.query(
+    return await db.query(
       "SELECT posts.id, name, picture, description, link_title, link_description, link_image, link FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.created_at DESC LIMIT 20"
     );
   } catch (error) {
@@ -85,7 +85,8 @@ const postRepository = {
   showPosts,
   updatePost,
   deletePost,
-  deletePosts_hastgs
+  deletePosts_hastgs,
+  isPostExistent
 };
 
 export default postRepository;
