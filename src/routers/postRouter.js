@@ -1,5 +1,7 @@
 import { Router } from "express";
-import { createPost,  showPosts, likePost, showMyLikes, howManyLikes } from "../controllers/postController.js";
+
+import { createPost,  showPosts, deletePost, updatePost, likePost, showMyLikes, howManyLikes } from "../controllers/postController.js";
+
 import schemaValidator from "../middlewares/schemaValidator.js";
 import {tokenValidator} from "../middlewares/tokenValidator.js";
 import postSchema from "../schemas/postSchema.js";
@@ -15,5 +17,7 @@ router.post("/like", tokenValidator, likePost)
 router.get("/like", tokenValidator, showMyLikes)
 
 router.post("/likes", tokenValidator, howManyLikes)
+
+router.put("/post/:id", updatePost);
 
 export default router;

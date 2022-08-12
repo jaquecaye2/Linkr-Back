@@ -29,7 +29,6 @@ CREATE TABLE "hastags" (
 );
 
 
-
 CREATE TABLE "posts_hastgs" (
 	"id" SERIAL PRIMARY KEY,
 	"post_id" INTEGER NOT NULL REFERENCES "posts"("id"),
