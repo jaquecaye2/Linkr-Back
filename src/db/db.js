@@ -9,8 +9,8 @@ const host = 'localhost';
 const port = 5432;
 const database = 'linkr';
 
-
 const { Pool } = pg;
+
 const configDatabase = {
   user,
   password,

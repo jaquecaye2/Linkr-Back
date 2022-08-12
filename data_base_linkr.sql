@@ -11,7 +11,10 @@ CREATE TABLE "users" (
 CREATE TABLE "posts" (
 	"id" SERIAL PRIMARY KEY,
 	"link" TEXT NOT NULL,
-	"description" TEXT,
+	"description" TEXT DEFAULT NULL,
+	"link_title" TEXT NOT NULL,
+	"link_description" TEXT,
+	"link_image" TEXT NOT NULL,
 	"user_id" INTEGER NOT NULL REFERENCES "users"("id"),
 	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
 );
