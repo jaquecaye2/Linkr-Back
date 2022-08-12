@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import authRepository from '../../repositories /authRepository.js'
+import authRepository from '../../repositories/authRepository.js'
 
 export async function signIn(req, res){
    try{
