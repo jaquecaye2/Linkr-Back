@@ -18,6 +18,8 @@ router.get("/like", tokenValidator, showMyLikes)
 
 router.post("/likes", tokenValidator, howManyLikes)
 
-router.put("/post/:id", updatePost);
+router.delete("/post/:id",tokenValidator,deletePost);
+
+router.put("/post/:id",tokenValidator, updatePost);
 
 export default router;

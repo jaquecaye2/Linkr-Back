@@ -23,7 +23,26 @@ export async function updatePost(request, response) {
   }
 }
 
+export async function deletePost(request, response) {
+  const { id } = request.params;
+  const  idUser  = response.locals.idUser;
+  console.log(idUser)
+  try {
+    const post = await postRepository.isPostExistent(id)
+    console.log(post)
+    if (!post[0]) {
+      return response.sendStatus(404);
+    }
 
+    await postRepository.deletePosts_hastgs(id)
+    
+    await postRepository.deletePost(id,idUser)
+
+    response.sendStatus(204)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export async function createPost(request, response) {
   try {

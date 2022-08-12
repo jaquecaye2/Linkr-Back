@@ -73,9 +73,8 @@ async function updatePost(text,id) {
         `
         DELETE FROM posts_hastgs ph 
         WHERE ph."post_id" = $1 
-        AND ph."hastag_id" = $2
     `,
-     [postId, hastgId]
+     [postId]
     );
   
     return posts_hastgs;
