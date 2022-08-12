@@ -1,15 +1,19 @@
 import { Router } from "express";
-import { createPost,  showPosts } from "../controllers/postController.js";
+import { createPost,  showPosts, likePost, showMyLikes, howManyLikes } from "../controllers/postController.js";
 import schemaValidator from "../middlewares/schemaValidator.js";
-//import validateUser from "../middlewares/validateUser.js";
+import {tokenValidator} from "../middlewares/tokenValidator.js";
 import postSchema from "../schemas/postSchema.js";
 
 const router = Router();
 
-// adicionar a validação do usuário em todas as rotas
+router.post("/post", tokenValidator, schemaValidator(postSchema), createPost);
 
-router.post("/post", schemaValidator(postSchema), createPost);
+router.get("/post", tokenValidator, showPosts)
 
-router.get("/post", showPosts)
+router.post("/like", tokenValidator, likePost)
+
+router.get("/like", tokenValidator, showMyLikes)
+
+router.post("/likes", tokenValidator, howManyLikes)
 
 export default router;
