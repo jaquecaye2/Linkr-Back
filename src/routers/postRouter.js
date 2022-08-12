@@ -10,6 +10,8 @@ router.post("/post", tokenValidator, schemaValidator(postSchema), createPost);
 
 router.get("/post", tokenValidator, showPosts);
 
-router.put("/post/:id", updatePost);
+router.delete("/post/:id",tokenValidator,deletePost);
+
+router.put("/post/:id",tokenValidator, updatePost);
 
 export default router;

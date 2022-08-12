@@ -49,3 +49,5 @@ CREATE TABLE "likes_posts" (
 	"post_id" INTEGER NOT NULL REFERENCES "posts"("id"),
 	"likes_id" INTEGER NOT NULL REFERENCES "likes"("id")
 );
+
+
