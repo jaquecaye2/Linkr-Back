@@ -24,21 +24,37 @@ async function updatePost(text,id) {
     return post;
   }
 
-  async function deletePost(id) {
-    const { rows: deletePostByiD } = await db.query(
+  async function deletePosts_hastgs(postId,hastgId) {
+    const { rows: posts_hastgs } = await db.query(
         `
-        DELETE FROM posts p
-        WHERE p.id = $1
+        DELETE FROM posts_hastgs ph 
+        WHERE ph."post_id" = $1 
+        AND ph."hastag_id" = $2
     `,
-        [id]
+     [postId, hastgId]
     );
   
-    return post;
+    return posts_hastgs;
+  }
+
+
+  async function deletePost(postId, userId) {
+    const { rows: deletePostByiD } = await db.query(
+        `
+        DELETE FROM posts p 
+        WHERE p.id = $1 
+        AND p.user_id = $2
+    `,
+     [postId, userId]
+    );
+  
+    return deletePostByiD;
   }
 
   
 export default {
     isPostExistent,
     updatePost,
-    deletePost
+    deletePost,
+    deletePosts_hastgs
 };

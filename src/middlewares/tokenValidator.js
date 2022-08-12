@@ -11,7 +11,7 @@ export function tokenValidator(req, res, next){
         const {iduser} =  Jwt.verify(token, secretKey);
         
         res.locals.idUser = iduser
-        
+
         next()
     }catch{
         return res.sendStatus(401)

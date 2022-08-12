@@ -22,13 +22,19 @@ export async function updatePost(request, response) {
 }
 
 export async function deletePost(request, response) {
-  const { id } = request.params;
+  const { id,hastagId } = request.params;
+  const  idUser  = response.locals.idUser;
+  console.log(idUser)
   try {
     const post = await postRepository.isPostExistent(id)
     if (!post[0]) {
       return response.sendStatus(404);
     }
-    await postRepository.isPostExistent(id)
+
+    await postRepository.deletePosts_hastgs(id,hastagId)
+
+    const deletePostByiD = await postRepository.deletePost(id,idUser)
+    console.log(deletePostByiD)
 
     response.sendStatus(204)
   } catch (error) {
