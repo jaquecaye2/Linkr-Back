@@ -9,8 +9,8 @@ const host = 'localhost';
 const port = 5432;
 const database = 'linkr';
 
-
 const { Pool } = pg;
+
 const configDatabase = {
   user,
   password,
@@ -26,4 +26,5 @@ const configDatabase = {
 } 
 
 const db = new Pool(configDatabase);
-export default db; 
+export default db;
+

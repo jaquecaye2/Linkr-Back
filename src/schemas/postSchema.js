@@ -1,15 +1,8 @@
 import joi from "joi";
 
 const postSchema = joi.object({
-    link: joi.string().uri().required(),
-    description: joi.string().allow("").optional()
-  });
-
-const updatePostSchema = joi.object({
-  description: joi.string().required()
+  link: joi.string().uri().required(),
+  description: joi.string().allow("").optional()
 });
 
-export { 
-    postSchema,
-    updatePostSchema
-};
+export default postSchema;

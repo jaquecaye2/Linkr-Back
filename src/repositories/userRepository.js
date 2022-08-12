@@ -39,4 +39,5 @@ async function verifyUserId(id) {
   return isUserExistent;
 }
 
-export default { getUsersWithName, getUsersWithId, verifyUserId };
+
+export default { getUsersWithName,getUsersWithId,verifyUserId };

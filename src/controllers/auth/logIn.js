@@ -1,8 +1,11 @@
 import bcrypt from 'bcrypt'
-import authRepository from '../../repositories /authRepository.js'
-import Jwt  from 'jsonwebtoken';
+import authRepository from '../../repositories/authRepository.js'
+import Jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 export async function logIn(req, res){
+    dotenv.config();
+
 
     const {email, password} = req.body
 
@@ -31,7 +34,9 @@ export async function logIn(req, res){
             picture: user.picture
         }
 
+
         return res.status(200).send(dataUser)
+
 
     }catch(error){
         console.log(error)

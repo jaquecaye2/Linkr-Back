@@ -1,4 +1,4 @@
-import hastagRepository from "../repositories /hastagRepository.js"
+import hastagRepository from "../repositories/hastagRepository.js"
 
 export async function hastag(req,res){
     const { hastag } = req.params;
@@ -42,7 +42,6 @@ export async function rankingHastags(req,res){
         console.log(e)
         res.status(500).send("erro na hastag")
     }
+
 }
-
-
 

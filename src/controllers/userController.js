@@ -1,6 +1,6 @@
-import userRepository from "../repositories /userRepository.js"
-import httpStatus from "../utils/httpStatus.js";
 
+import userRepository from "../repositories/userRepository.js";
+import httpStatus from "../utils/httpStatus.js";
 
 async function getUsers(req, res) {
   const ZERO = 0;
@@ -23,6 +23,7 @@ async function getUsers(req, res) {
 
 async function redirectToUser(req, res) {
   const { id } = req.params;
+  console.log("oi")
   try {
     const isUserExistent = await userRepository.verifyUserId(id)
 
@@ -39,6 +40,7 @@ async function redirectToUser(req, res) {
 }
 
 export default {
-  getUsers,
-  redirectToUser
+  redirectToUser,
+  getUsers
+  
 };
