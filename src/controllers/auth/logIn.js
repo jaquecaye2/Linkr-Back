@@ -26,7 +26,12 @@ export async function logIn(req, res){
 
         const token = Jwt.sign({iduser}, secretKey, config)
 
-        return res.status(200).send(token)
+        const dataUser = {
+            token,
+            picture: user.picture
+        }
+
+        return res.status(200).send(dataUser)
 
     }catch(error){
         console.log(error)
