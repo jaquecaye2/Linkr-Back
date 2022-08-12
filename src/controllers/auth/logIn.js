@@ -31,7 +31,7 @@ export async function logIn(req, res){
             picture: user.picture
         }
 
-        return res.status(200).send(dataUser)
+        return res.status(200).send(dataUsernada)
 
     }catch(error){
         console.log(error)
