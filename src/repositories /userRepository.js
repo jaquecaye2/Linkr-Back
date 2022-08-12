@@ -16,7 +16,7 @@ async function getUsersWithName(name) {
 async function getUsersWithId(id) {
   const { rows: users } = await db.query(
     `
-    SELECT u.id, u.name, p.link, u.picture, p.description
+    SELECT u.id, u.name, p.link, u.picture, p.description, p.id AS post_id
     FROM users u
     JOIN posts P ON p.user_id = u.id
     WHERE u.id = $1

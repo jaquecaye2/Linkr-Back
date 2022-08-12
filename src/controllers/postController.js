@@ -20,3 +20,23 @@ export async function updatePost(request, response) {
       );
   }
 }
+
+export async function deletePost(request, response) {
+  const { id } = request.params;
+  try {
+    const post = await postRepository.isPostExistent(id)
+    if (!post[0]) {
+      return response.sendStatus(404);
+    }
+    await postRepository.isPostExistent(id)
+
+    response.sendStatus(204)
+  } catch (error) {
+    console.log(error)
+    response
+      .status(500)
+      .send(
+        "An error occured while trying to fetch the posts, please refresh the page"
+      );
+  }
+}
