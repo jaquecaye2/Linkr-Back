@@ -23,7 +23,6 @@ async function getUsers(req, res) {
 
 async function redirectToUser(req, res) {
   const { id } = req.params;
-  console.log("oi")
   try {
     const isUserExistent = await userRepository.verifyUserId(id)
 

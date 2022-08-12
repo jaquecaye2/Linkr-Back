@@ -10,8 +10,6 @@ router.post("/post", tokenValidator, schemaValidator(postSchema), createPost);
 
 router.get("/post", tokenValidator, showPosts);
 
-router.delete("/post/delete/:id/:hastagId",tokenValidator,deletePost);
-
 router.put("/post/:id", updatePost);
 
 export default router;
