@@ -8,17 +8,6 @@ CREATE TABLE "users" (
 );
 
 
-
-CREATE TABLE "sessions" (
-	"id" SERIAL PRIMARY KEY,
-	"user_id" INTEGER NOT NULL REFERENCES "users"("id"),
-	"token" TEXT NOT NULL UNIQUE,
-	"expire" TEXT NOT NULL,
-	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-
-
 CREATE TABLE "posts" (
 	"id" SERIAL PRIMARY KEY,
 	"link" TEXT NOT NULL,

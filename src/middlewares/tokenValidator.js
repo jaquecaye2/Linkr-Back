@@ -6,7 +6,6 @@ export function tokenValidator(req, res, next){
 
     try{
         const headers = req.headers
-
         const secretKey = process.env.JWT_SECRET
         const token = headers.authorization?.split(" ")[1]
         
