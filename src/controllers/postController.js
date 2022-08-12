@@ -4,6 +4,7 @@ export async function updatePost(request, response) {
   const { description } = request.body;
   const { id } = request.params;
   try {
+    
     const post = await postRepository.isPostExistent(id)
     if (!post[0]) {
       return response.sendStatus(404);
