@@ -29,7 +29,7 @@ export async function updatePost(request, response) {
 }
 
 export async function deletePost(request, response) {
-  const { id } = request.params;
+  const { idPost } = request.params;
   const  idUser  = response.locals.idUser;
 
   try {
@@ -37,9 +37,13 @@ export async function deletePost(request, response) {
     if (!post[0]) {
       return response.sendStatus(404);
     }
-    if(id !== idUser){
+
+    // fazer uma query para ver de quem é o dono do id do post que esta vindo. Pegar o id do dono e comparar com o id do token
+
+    /*if(id !== idUser){
       return response.sendStatus(401);
-    }
+    }*/
+
     await postRepository.deletePosts_hastgs(id)
     
     await postRepository.deletePost(id,idUser)
