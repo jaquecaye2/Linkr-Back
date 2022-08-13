@@ -4,8 +4,8 @@ import postRepository from "../repositories/postRepository.js"
 
 export async function updatePost(request, response) {
   const { description } = request.body;
-  const { id } = request.params; // id post
-  const  idUser  = response.locals.idUser;
+  const { id } = request.params;// id post
+  const  idUser  = response.locals.idUser; 
 
   try {
     const post = await postRepository.isPostExistent(id)
@@ -13,12 +13,12 @@ export async function updatePost(request, response) {
       return response.sendStatus(404);
     }
 
-    // ordenar
-
-    /*if(id !== idUser){
+    const postOwner = await postRepository.findPostOwner(idUser,id)
+     console.log(postOwner)
+     if(postOwner.length === 0){
       return response.sendStatus(401);
-    }*/
-    
+     }
+
     await postRepository.updatePost(description, id)
 
     response.status(200).send(post);
@@ -42,17 +42,17 @@ export async function deletePost(request, response) {
       return response.sendStatus(404);
     }
 
-    // fazer uma query para ver de quem é o dono do id do post que esta vindo. Pegar o id do dono e comparar com o id do token
-
-    /*if(id !== idUser){
+     const postOwner = await postRepository.findPostOwner(idUser,id)
+     console.log(postOwner)
+     if(postOwner.length === 0){
       return response.sendStatus(401);
-    }*/
+     }
 
-    // fazer uma query para deletar os likes de determinado post na tabela likes_posts.
+    await postRepository.deletePostLikes(id)
 
     await postRepository.deletePosts_hastgs(id)
     
-    await postRepository.deletePost(id,idUser)
+    await postRepository.deletePost(id,idUser) 
 
     response.sendStatus(204)
   } catch (error) {

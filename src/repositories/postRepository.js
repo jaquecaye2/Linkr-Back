@@ -45,6 +45,8 @@ async function updatePost(text, id) {
       UPDATE posts 
       SET description = $1
       WHERE id = $2
+      ORDER BY posts.id DESC 
+      LIMIT 20
     `,
     [text, id]
   );
@@ -76,6 +78,38 @@ async function deletePost(postId, userId) {
 
   return deletePostByiD;
 }
+
+
+async function findPostOwner(postId,userId) {
+  const { rows: postOwner } = await db.query(
+    `
+    DELETE FROM posts p 
+    WHERE p.id = $1 
+    AND p.user_id = $2
+    `,
+    [userId,postId]
+  );
+
+  return postOwner;
+}
+
+
+async function deletePostLikes(postId) {
+  const { rows: postLikes } = await db.query(
+    `
+    SELECT * FROM likes_posts pl
+    WHERE pl."post_id" = $2
+    `,
+    [postId]
+  );
+
+  return postLikes;
+}
+
+
+
+
+
 
 async function likePost(idUser, post) {
   console.log(idUser)
@@ -136,6 +170,8 @@ const postRepository = {
   deletePost,
   deletePosts_hastgs,
   updatePost,
+  findPostOwner,
+  deletePostLikes
 };
 
 export default postRepository;
