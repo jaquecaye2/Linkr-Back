@@ -4,16 +4,20 @@ import postRepository from "../repositories/postRepository.js"
 
 export async function updatePost(request, response) {
   const { description } = request.body;
-  const { id } = request.params;
+  const { id } = request.params; // id post
   const  idUser  = response.locals.idUser;
+
   try {
     const post = await postRepository.isPostExistent(id)
     if (!post[0]) {
       return response.sendStatus(404);
     }
-    if(id !== idUser){
+
+    // ordenar
+
+    /*if(id !== idUser){
       return response.sendStatus(401);
-    }
+    }*/
     
     await postRepository.updatePost(description, id)
 
@@ -29,7 +33,7 @@ export async function updatePost(request, response) {
 }
 
 export async function deletePost(request, response) {
-  const { idPost } = request.params;
+  const { id } = request.params; // id Post
   const  idUser  = response.locals.idUser;
 
   try {
@@ -43,6 +47,8 @@ export async function deletePost(request, response) {
     /*if(id !== idUser){
       return response.sendStatus(401);
     }*/
+
+    // fazer uma query para deletar os likes de determinado post na tabela likes_posts.
 
     await postRepository.deletePosts_hastgs(id)
     
