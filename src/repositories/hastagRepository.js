@@ -40,11 +40,38 @@ async function rankingHastags(sum, hastag) {
   );
 }
 
+async function insertManyHashtags(hashtags) {
+  const params = hashtags.map((hashtag, index) => `($${index + 1})`).join(", ");
+
+  await db.query(
+    `
+    INSERT INTO hastags (name)
+    VALUES
+    ${params}
+  `,
+    hashtags
+  );
+}
+
+async function associateHashtagsPost(postId, hashtagsIds) {
+  const values = hashtagsIds
+    .map((hashtagId) => `(${postId}, ${hashtagId})`)
+    .join(", ");
+
+  await db.query(`
+    INSERT INTO posts_hastgs (post_id, hastag_id)
+    VALUES
+    ${values}
+  `);
+}
+
 const hastagRepository = {
   findHastag,
   redirectHastag,
   updateView,
   rankingHastags,
+  insertManyHashtags,
+  associateHashtagsPost,
 };
 
 export default hastagRepository;
