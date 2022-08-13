@@ -6,7 +6,6 @@ import dotenv from 'dotenv';
 export async function logIn(req, res){
     dotenv.config();
 
-
     const {email, password} = req.body
 
     try{
@@ -31,12 +30,11 @@ export async function logIn(req, res){
 
         const dataUser = {
             token,
-            picture: user.picture
+            picture: user.picture,
+            name: user.name
         }
 
-
         return res.status(200).send(dataUser)
-
 
     }catch(error){
         console.log(error)

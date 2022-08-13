@@ -42,6 +42,5 @@ export async function rankingHastags(req,res){
         console.log(e)
         res.status(500).send("erro na hastag")
     }
-
 }
 

@@ -24,7 +24,8 @@ CREATE TABLE "posts" (
 CREATE TABLE "hastags" (
 	"id" SERIAL PRIMARY KEY,
 	"name" TEXT NOT NULL UNIQUE,
-	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
+	"created_at" TIMESTAMP NOT NULL DEFAULT NOW(),
+	"views" INTEGER DEFAULT 0
 );
 
 
@@ -35,19 +36,8 @@ CREATE TABLE "posts_hastgs" (
 );
 
 
-
-CREATE TABLE "likes" (
-	"id" SERIAL PRIMARY KEY,
-	"user_id" INTEGER NOT NULL REFERENCES "users"("id"),
-	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-
-
 CREATE TABLE "likes_posts" (
 	"id" SERIAL PRIMARY KEY,
 	"post_id" INTEGER NOT NULL REFERENCES "posts"("id"),
-	"likes_id" INTEGER NOT NULL REFERENCES "likes"("id")
+	"user_id" INTEGER NOT NULL REFERENCES "users"("id")
 );
-
-

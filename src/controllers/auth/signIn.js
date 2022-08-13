@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt'
 import authRepository from '../../repositories/authRepository.js'
 
-
 export async function signIn(req, res){
    try{
       const {name, password, email, pictureUrl} = req.body
