@@ -6,8 +6,7 @@ import postSchema from "../schemas/postSchema.js";
 
 const router = Router();
 
-// router.post("/post", tokenValidator, schemaValidator(postSchema), createPost);
-router.post("/post", createPost);
+router.post("/post", tokenValidator, schemaValidator(postSchema), createPost);
 
 router.get("/post", tokenValidator, showPosts);
 
