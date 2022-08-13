@@ -85,7 +85,7 @@ async function findPostOwner(postId,userId) {
     WHERE p.id = $1 
     AND p.user_id = $2
     `,
-    [userId,postId]
+    [postId,userId]
   );
 
   return postOwner;
