@@ -28,17 +28,6 @@ async function showPosts() {
   }
 }
 
-async function likePost(idUser, post) {
-  try {
-    return await connection.query(
-      "INSERT INTO likes_posts (post_id, user_id) VALUES ($1, $2)",
-      [post.id, idUser]
-    );
-  } catch (error) {
-    return false;
-  }
-}
-
 async function isPostExistent(id) {
   const { rows: post } = await db.query(
     `
@@ -49,6 +38,7 @@ async function isPostExistent(id) {
 
   return post;
 }
+
 async function updatePost(text, id) {
   const { rows: post } = await db.query(
     `
@@ -87,9 +77,24 @@ async function deletePost(postId, userId) {
   return deletePostByiD;
 }
 
+async function likePost(idUser, post) {
+  console.log(idUser)
+  console.log(post)
+
+  try {
+    return await db.query(
+      "INSERT INTO likes_posts (post_id, user_id) VALUES ($1, $2)",
+      [post.id, idUser]
+    );
+  } catch (error) {
+    console.log(error)
+    return false;
+  }
+}
+
 async function deslikePost(idUser, post) {
   try {
-    return await connection.query(
+    return await db.query(
       "DELETE FROM likes_posts WHERE post_id = $1 AND user_id = $2;",
       [post.id, idUser]
     );
@@ -100,7 +105,7 @@ async function deslikePost(idUser, post) {
 
 async function showMyLikes(idUser) {
   try {
-    return await connection.query(
+    return await db.query(
       "SELECT * FROM likes_posts WHERE user_id = $1",
       [idUser]
     );
@@ -111,7 +116,7 @@ async function showMyLikes(idUser) {
 
 async function howManyLikes(post) {
   try {
-    return await connection.query(
+    return await db.query(
       "SELECT likes_posts.id, likes_posts.post_id, users.name FROM likes_posts JOIN users ON users.id = likes_posts.user_id WHERE post_id = $1",
       [post.id]
     );
