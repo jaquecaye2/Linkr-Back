@@ -78,7 +78,7 @@ async function deletePost(postId, userId) {
 }
 
 
-async function findPostOwner(postId,userId) {
+async function findPostOwner(userId,postId) {
   const { rows: postOwner } = await db.query(
     `
     DELETE FROM posts p 
