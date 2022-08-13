@@ -45,8 +45,6 @@ async function updatePost(text, id) {
       UPDATE posts 
       SET description = $1
       WHERE id = $2
-      ORDER BY posts.id DESC 
-      LIMIT 20
     `,
     [text, id]
   );
@@ -105,10 +103,6 @@ async function deletePostLikes(postId) {
 
   return postLikes;
 }
-
-
-
-
 
 
 async function likePost(idUser, post) {
