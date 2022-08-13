@@ -44,6 +44,7 @@ async function likePost(idUser, post) {
   } catch (error) {
     return false;
   }
+}
 
 async function isPostExistent(id) {
   const { rows: post } = await db.query(
@@ -68,7 +69,7 @@ async function updatePost(text,id) {
     return post;
   }
 
-  async function deletePosts_hastgs(postId,hastgId) {
+  async function deletePosts_hastgs(postId) {
     const { rows: posts_hastgs } = await db.query(
         `
         DELETE FROM posts_hastgs ph 
@@ -95,14 +96,6 @@ async function updatePost(text,id) {
   }
 
 
-const postRepository = {
-  createPost,
-  showPosts,
-  updatePost,
-  deletePost,
-  deletePosts_hastgs,
-  isPostExistent
-};
 
 async function deslikePost(idUser, post) {
   try {
@@ -138,13 +131,16 @@ async function howManyLikes(post) {
   }
 }
 
+
 const postRepository = {
   createPost,
   showPosts,
   likePost,
   deslikePost,
   showMyLikes,
-  howManyLikes
+  howManyLikes,
+  isPostExistent
 };
+
 
 export default postRepository;

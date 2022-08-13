@@ -16,6 +16,7 @@ export async function logIn(req, res){
         }
         
         user = user[0]
+        console.log(user)
         const passwordVerify = bcrypt.compareSync(password, user.password_hash)
 
         if(!passwordVerify){
@@ -31,7 +32,8 @@ export async function logIn(req, res){
         const dataUser = {
             token,
             picture: user.picture,
-            name: user.name
+            name: user.name,
+            userId: user.id
         }
 
         return res.status(200).send(dataUser)
