@@ -5,11 +5,16 @@ import postRepository from "../repositories/postRepository.js"
 export async function updatePost(request, response) {
   const { description } = request.body;
   const { id } = request.params;
+  const  idUser  = response.locals.idUser;
   try {
     const post = await postRepository.isPostExistent(id)
     if (!post[0]) {
       return response.sendStatus(404);
     }
+    if(id !== idUser){
+      return response.sendStatus(401);
+    }
+    
     await postRepository.updatePost(description, id)
 
     response.status(200).send(post);
@@ -32,7 +37,9 @@ export async function deletePost(request, response) {
     if (!post[0]) {
       return response.sendStatus(404);
     }
-
+    if(id !== idUser){
+      return response.sendStatus(401);
+    }
     await postRepository.deletePosts_hastgs(id)
     
     await postRepository.deletePost(id,idUser)
@@ -83,6 +90,7 @@ export async function showPosts(request, response) {
 
     response.status(201).send(posts);
   } catch (error) {
+    console.log(error)
     response
       .status(500)
       .send(

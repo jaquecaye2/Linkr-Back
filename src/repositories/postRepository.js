@@ -139,7 +139,11 @@ const postRepository = {
   deslikePost,
   showMyLikes,
   howManyLikes,
-  isPostExistent
+  isPostExistent,
+  deletePost,
+  deletePosts_hastgs,
+  updatePost
+
 };
 
 

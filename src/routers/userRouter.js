@@ -9,6 +9,6 @@ const userRouter = Router();
 
 userRouter.get("/users", userController.getUsers);
 
-userRouter.get("/users/:id", userController.redirectToUser );
+userRouter.get("/users/:id",tokenValidator, userController.redirectToUser );
 
 export default userRouter;
