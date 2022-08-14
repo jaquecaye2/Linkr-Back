@@ -7,7 +7,7 @@ const user = 'postgres';
 const password = process.env.DB_PASSWORD;
 const host = 'localhost';
 const port = 5432;
-const database = 'linkr';
+const database = 'linkr2';
 
 const { Pool } = pg;
 
