@@ -14,12 +14,12 @@ export async function updatePost(request, response) {
     }
 
     const postOwner = await postRepository.findPostOwner(idUser,id)
-     console.log(postOwner)
+
      if(postOwner.length === 0){
       return response.sendStatus(401);
      }
 
-    await postRepository.updatePost(description, id)
+    await postRepository.updatePost(description, id, idUser)
 
     response.status(200).send(post);
   } catch (error) {
@@ -159,3 +159,4 @@ export async function howManyLikes(request, response) {
       );
   }
 }
+

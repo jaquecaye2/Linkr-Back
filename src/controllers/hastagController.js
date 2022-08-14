@@ -5,7 +5,7 @@ export async function hastag(req,res){
     const newHastag = hastag?.replace("#", "").trim();
     try{
         const  findHastag =  await hastagRepository.findHastag(newHastag)
-        if(findHastag.rowCount == 0){
+        if(findHastag.length == 0){
            return res.status(404).send("hastag Not Found")
         }
 

@@ -29,27 +29,37 @@ async function showPosts() {
 }
 
 async function isPostExistent(id) {
-  const { rows: post } = await db.query(
-    `
-    SELECT * FROM posts WHERE id = $1
-  `,
-    [id]
-  );
 
-  return post;
+  try {
+    const { rows: post } = await db.query(
+      `
+        SELECT * FROM posts WHERE id = $1
+      `,
+      [id]
+    );
+
+    return post;
+  } catch (e) {
+    console.log(e)
+    return false
+  }
 }
 
-async function updatePost(text, id) {
-  const { rows: post } = await db.query(
-    `
-      UPDATE posts 
-      SET description = $1
-      WHERE id = $2
-    `,
-    [text, id]
-  );
-
-  return post;
+async function updatePost(text, id, userId) {
+  try{
+    const { rows: post } = await db.query(
+      `
+        UPDATE posts 
+        SET description = $1
+        WHERE id = $2 AND user_id = $3
+      `,
+      [text, id, userId]
+    );
+    return post;
+  }catch(e){
+    console.log(e)
+    return false
+ }
 }
 
 async function deletePosts_hastgs(postId) {
@@ -81,7 +91,7 @@ async function deletePost(postId, userId) {
 async function findPostOwner(userId,postId) {
   const { rows: postOwner } = await db.query(
     `
-    DELETE FROM posts p 
+    SELECT FROM posts p 
     WHERE p.id = $1 
     AND p.user_id = $2
     `,
@@ -96,7 +106,7 @@ async function deletePostLikes(postId) {
   const { rows: postLikes } = await db.query(
     `
     SELECT * FROM likes_posts pl
-    WHERE pl."post_id" = $2
+    WHERE pl."post_id" = $1
     `,
     [postId]
   );
