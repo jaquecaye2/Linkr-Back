@@ -33,6 +33,8 @@ CREATE TABLE "posts_hastgs" (
 	"id" SERIAL PRIMARY KEY,
 	"post_id" INTEGER NOT NULL REFERENCES "posts"("id"),
 	"hastag_id" INTEGER NOT NULL REFERENCES "hastags"("id")
+	ON DELETE CASCADE
+ 	ON UPDATE CASCADE
 );
 
 
@@ -40,4 +42,6 @@ CREATE TABLE "likes_posts" (
 	"id" SERIAL PRIMARY KEY,
 	"post_id" INTEGER NOT NULL REFERENCES "posts"("id"),
 	"user_id" INTEGER NOT NULL REFERENCES "users"("id")
+	ON DELETE CASCADE
+ 	ON UPDATE CASCADE
 );
