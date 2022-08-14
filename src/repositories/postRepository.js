@@ -29,7 +29,6 @@ async function showPosts() {
 }
 
 async function isPostExistent(id) {
-
   try {
     const { rows: post } = await db.query(
       `
@@ -40,13 +39,13 @@ async function isPostExistent(id) {
 
     return post;
   } catch (e) {
-    console.log(e)
-    return false
+    console.log(e);
+    return false;
   }
 }
 
 async function updatePost(text, id, userId) {
-  try{
+  try {
     const { rows: post } = await db.query(
       `
         UPDATE posts 
@@ -56,10 +55,10 @@ async function updatePost(text, id, userId) {
       [text, id, userId]
     );
     return post;
-  }catch(e){
-    console.log(e)
-    return false
- }
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 }
 
 async function deletePosts_hastgs(postId) {
@@ -72,6 +71,18 @@ async function deletePosts_hastgs(postId) {
   );
 
   return posts_hastgs;
+}
+
+async function deletePostLikes(postId) {
+  const { rows: postLikes } = await db.query(
+    `
+    DELETE FROM likes_posts pl
+    WHERE pl."post_id" = $1
+    `,
+    [postId]
+  );
+
+  return postLikes;
 }
 
 async function deletePost(postId, userId) {
@@ -87,37 +98,22 @@ async function deletePost(postId, userId) {
   return deletePostByiD;
 }
 
-
-async function findPostOwner(userId,postId) {
+async function findPostOwner(userId, postId) {
   const { rows: postOwner } = await db.query(
     `
     SELECT FROM posts p 
     WHERE p.id = $1 
     AND p.user_id = $2
     `,
-    [postId,userId]
+    [postId, userId]
   );
 
   return postOwner;
 }
 
-
-async function deletePostLikes(postId) {
-  const { rows: postLikes } = await db.query(
-    `
-    SELECT * FROM likes_posts pl
-    WHERE pl."post_id" = $1
-    `,
-    [postId]
-  );
-
-  return postLikes;
-}
-
-
 async function likePost(idUser, post) {
-  console.log(idUser)
-  console.log(post)
+  console.log(idUser);
+  console.log(post);
 
   try {
     return await db.query(
@@ -125,7 +121,7 @@ async function likePost(idUser, post) {
       [post.id, idUser]
     );
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return false;
   }
 }
@@ -143,10 +139,9 @@ async function deslikePost(idUser, post) {
 
 async function showMyLikes(idUser) {
   try {
-    return await db.query(
-      "SELECT * FROM likes_posts WHERE user_id = $1",
-      [idUser]
-    );
+    return await db.query("SELECT * FROM likes_posts WHERE user_id = $1", [
+      idUser,
+    ]);
   } catch (error) {
     return false;
   }
@@ -175,9 +170,7 @@ const postRepository = {
   deletePosts_hastgs,
   updatePost,
   findPostOwner,
-  deletePostLikes
+  deletePostLikes,
 };
 
 export default postRepository;
-
-

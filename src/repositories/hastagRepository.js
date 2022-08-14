@@ -7,7 +7,7 @@ async function findHastag(hastag) {
 
 async function redirectHastag(hastag) {
   return db.query(`
-  SELECT u.name, u.id AS user_id, u.picture, p.link, p.id as post_id, p.description, p.created_at , h.name AS hastag
+  SELECT u.name, u.id AS user_id, u.picture, p.link, p.id as post_id, p.description, p.created_at , h.name AS hastag, link_title, link_description, link_image
   FROM  posts_hastgs pt
   JOIN posts p ON p.id = pt.post_id
   JOIN users u ON p.user_id = u.id
