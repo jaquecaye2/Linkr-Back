@@ -1,5 +1,4 @@
 import urlMetadata from "url-metadata";
-
 import postRepository from "../repositories/postRepository.js";
 import hastagRepository from "../repositories/hastagRepository.js";
 
@@ -41,6 +40,64 @@ async function associateHashtagsToPost(userId, hashtags) {
   const hashtagsIds = hashtags.map((hashtag) => hashtag.id);
 
   await hastagRepository.associateHashtagsPost(post.id, hashtagsIds);
+}
+
+export async function updatePost(request, response) {
+  const { description } = request.body;
+  const { id } = request.params; // id post
+  const idUser = response.locals.idUser;
+
+  try {
+    const post = await postRepository.isPostExistent(id);
+    if (!post[0]) {
+      return response.sendStatus(404);
+    }
+
+    const postOwner = await postRepository.findPostOwner(idUser, id);
+
+    if (postOwner.length === 0) {
+      return response.sendStatus(401);
+    }
+
+    await postRepository.updatePost(description, id, idUser);
+
+    response.status(200).send(post);
+  } catch (error) {
+    console.log(error);
+    response
+      .status(500)
+      .send(
+        "An error occured while trying to fetch the posts, please refresh the page"
+      );
+  }
+}
+
+export async function deletePost(request, response) {
+  const { id } = request.params; // id Post
+  const idUser = response.locals.idUser;
+
+  try {
+    const post = await postRepository.isPostExistent(id);
+    if (!post[0]) {
+      return response.sendStatus(404);
+    }
+
+    const postOwner = await postRepository.findPostOwner(idUser, id);
+    console.log(postOwner);
+    if (postOwner.length === 0) {
+      return response.sendStatus(401);
+    }
+
+    await postRepository.deletePosts_hastgs(id);
+
+    await postRepository.deletePostLikes(id);
+
+    await postRepository.deletePost(id, idUser);
+
+    response.sendStatus(204);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function createPost(request, response) {
@@ -97,6 +154,57 @@ export async function showPosts(request, response) {
     }
 
     response.status(201).send(posts);
+  } catch (error) {
+    console.log(error);
+    response
+      .status(500)
+      .send(
+        "An error occured while trying to fetch the posts, please refresh the page"
+      );
+  }
+}
+
+export async function likePost(request, response) {
+  try {
+    const idUser = response.locals.idUser;
+
+    const post = request.body;
+
+    if (post.type === "like") {
+      await postRepository.likePost(idUser, post);
+    } else {
+      await postRepository.deslikePost(idUser, post);
+    }
+
+    response.status(201).send();
+  } catch (error) {
+    response.status(500).send();
+  }
+}
+
+export async function showMyLikes(request, response) {
+  try {
+    const idUser = response.locals.idUser;
+
+    const { rows: likedPosts } = await postRepository.showMyLikes(idUser);
+
+    response.status(201).send(likedPosts);
+  } catch (error) {
+    response
+      .status(500)
+      .send(
+        "An error occured while trying to fetch the posts, please refresh the page"
+      );
+  }
+}
+
+export async function howManyLikes(request, response) {
+  try {
+    const post = request.body;
+
+    const { rows: likedPosts } = await postRepository.howManyLikes(post);
+
+    response.status(201).send(likedPosts);
   } catch (error) {
     response
       .status(500)

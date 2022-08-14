@@ -10,8 +10,13 @@ export async function logIn(req, res){
 
     try{
         let {rows: user} = await authRepository.getUser(email)
+        
+        if(user.length===0){
+            return  res.status(401).send("email or password incorrect");
+        }
+        
         user = user[0]
-
+        console.log(user)
         const passwordVerify = bcrypt.compareSync(password, user.password_hash)
 
         if(!passwordVerify){
@@ -24,7 +29,14 @@ export async function logIn(req, res){
 
         const token = Jwt.sign({iduser}, secretKey, config)
 
-        return res.status(200).send(token)
+        const dataUser = {
+            token,
+            picture: user.picture,
+            name: user.name,
+            userId: user.id
+        }
+
+        return res.status(200).send(dataUser)
 
     }catch(error){
         console.log(error)

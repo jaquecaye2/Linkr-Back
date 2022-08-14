@@ -13,6 +13,7 @@ async function redirectHastag(hastag) {
     JOIN users u ON p.user_id = u.id
     JOIN hastags h ON h.id = pt.hastag_id
     WHERE h.name ILIKE $1
+    ORDER BY p.id DESC LIMIT 20
   `,
     [`%${hastag}%`]
   );
