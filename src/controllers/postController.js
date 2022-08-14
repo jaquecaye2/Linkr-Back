@@ -4,13 +4,22 @@ import postRepository from "../repositories/postRepository.js"
 
 export async function updatePost(request, response) {
   const { description } = request.body;
-  const { id } = request.params;
+  const { id } = request.params;// id post
+  const  idUser  = response.locals.idUser; 
+
   try {
     const post = await postRepository.isPostExistent(id)
     if (!post[0]) {
       return response.sendStatus(404);
     }
-    await postRepository.updatePost(description, id)
+
+    const postOwner = await postRepository.findPostOwner(idUser,id)
+
+     if(postOwner.length === 0){
+      return response.sendStatus(401);
+     }
+
+    await postRepository.updatePost(description, id, idUser)
 
     response.status(200).send(post);
   } catch (error) {
@@ -24,7 +33,7 @@ export async function updatePost(request, response) {
 }
 
 export async function deletePost(request, response) {
-  const { id } = request.params;
+  const { id } = request.params; // id Post
   const  idUser  = response.locals.idUser;
 
   try {
@@ -33,9 +42,17 @@ export async function deletePost(request, response) {
       return response.sendStatus(404);
     }
 
+     const postOwner = await postRepository.findPostOwner(idUser,id)
+     console.log(postOwner)
+     if(postOwner.length === 0){
+      return response.sendStatus(401);
+     }
+
+    await postRepository.deletePostLikes(id)
+
     await postRepository.deletePosts_hastgs(id)
     
-    await postRepository.deletePost(id,idUser)
+    await postRepository.deletePost(id,idUser) 
 
     response.sendStatus(204)
   } catch (error) {
@@ -83,6 +100,7 @@ export async function showPosts(request, response) {
 
     response.status(201).send(posts);
   } catch (error) {
+    console.log(error)
     response
       .status(500)
       .send(
@@ -141,3 +159,4 @@ export async function howManyLikes(request, response) {
       );
   }
 }
+

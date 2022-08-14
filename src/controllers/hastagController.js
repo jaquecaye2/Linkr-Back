@@ -5,12 +5,12 @@ export async function hastag(req,res){
     const newHastag = hastag?.replace("#", "").trim();
     try{
         const  findHastag =  await hastagRepository.findHastag(newHastag)
-        if(findHastag.rowCount == 0){
+        if(findHastag.length == 0){
            return res.status(404).send("hastag Not Found")
         }
 
        const { rows : postHastag } =  await hastagRepository.redirectHastag(newHastag)
-    
+       
         res.status(200).send(postHastag)
     }catch(e){
         console.log(e)
@@ -37,6 +37,10 @@ export async function updateHastagView(req,res){
 export async function rankingHastags(req,res){
     try{
         const { rows : rankig} = await hastagRepository.rankingHastags()
+
+        if(rankig.length === 0){
+            return res.sendStatus(204)
+        }
         res.status(200).send(rankig)
     }catch(e){
         console.log(e)

@@ -20,6 +20,7 @@ async function getUsersWithId(id) {
     FROM users u
     JOIN posts P ON p.user_id = u.id
     WHERE u.id = $1
+    ORDER BY p.id DESC LIMIT 20
   `,
     [id]
   );
@@ -41,4 +42,6 @@ async function verifyUserId(id) {
 
 
 export default { getUsersWithName,getUsersWithId,verifyUserId };
+
+
 
