@@ -18,6 +18,20 @@ async function createPost(infoPost, linkMetadata, idUser) {
   }
 }
 
+async function getLastPostByUserId(userId) {
+  return db.query(
+    `
+        SELECT *
+        FROM posts
+        WHERE posts.user_id = $1
+        ORDER BY posts.created_at DESC
+        LIMIT 1
+    `,
+    [userId]
+  );
+}
+
+
 async function showPosts() {
   try {
     return await db.query(
@@ -171,6 +185,7 @@ const postRepository = {
   updatePost,
   findPostOwner,
   deletePostLikes,
+  getLastPostByUserId
 };
 
 export default postRepository;

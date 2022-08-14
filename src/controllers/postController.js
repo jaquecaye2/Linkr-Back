@@ -1,5 +1,46 @@
 import urlMetadata from "url-metadata";
 import postRepository from "../repositories/postRepository.js";
+import hastagRepository from "../repositories/hastagRepository.js";
+
+function getPostHashtags(post) {
+  const hashtagRegex = /#\w+/gm;
+
+  const matches = post.match(hashtagRegex);
+
+  if (!matches) {
+    return null;
+  }
+
+  return matches.map((hashtag) => hashtag.replace("#", ""));
+}
+
+async function getHashtagsFromDatabase(hashtags) {
+  const results = await Promise.all(
+    hashtags.map((hashtag) => hastagRepository.findHastag(hashtag))
+  );
+
+  return results.map((result) => result.rows[0]);
+}
+
+async function createHashtagsIfNotExists(postHashtags) {
+  const hashtags = await getHashtagsFromDatabase(postHashtags);
+
+  const hashtagsNotFound = postHashtags.filter((_, index) => !hashtags[index]);
+
+  if (hashtagsNotFound.length > 0) {
+    await hastagRepository.insertManyHashtags(hashtagsNotFound);
+  }
+}
+
+async function associateHashtagsToPost(userId, hashtags) {
+  const {
+    rows: [post],
+  } = await postRepository.getLastPostByUserId(userId);
+
+  const hashtagsIds = hashtags.map((hashtag) => hashtag.id);
+
+  await hastagRepository.associateHashtagsPost(post.id, hashtagsIds);
+}
 
 export async function updatePost(request, response) {
   const { description } = request.body;
@@ -69,6 +110,16 @@ export async function createPost(request, response) {
       infoPost.description = null;
     }
 
+    const postHashtags = getPostHashtags(infoPost.description);
+
+    let hashtags;
+
+    if (postHashtags) {
+      await createHashtagsIfNotExists(postHashtags);
+
+      hashtags = await getHashtagsFromDatabase(postHashtags);
+    }
+
     let linkMetadata = {};
 
     await urlMetadata(`${infoPost.link}`).then(
@@ -82,8 +133,13 @@ export async function createPost(request, response) {
 
     await postRepository.createPost(infoPost, linkMetadata, idUser);
 
+    if (hashtags) {
+      await associateHashtagsToPost(idUser, hashtags);
+    }
+
     response.status(201).send();
   } catch (error) {
+    console.log(error);
     response.status(500).send();
   }
 }
