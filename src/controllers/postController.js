@@ -110,14 +110,16 @@ export async function createPost(request, response) {
       infoPost.description = null;
     }
 
-    const postHashtags = getPostHashtags(infoPost.description);
+    if (infoPost.description) {
+      const postHashtags = getPostHashtags(infoPost.description);
 
-    let hashtags;
+      let hashtags;
 
-    if (postHashtags) {
-      await createHashtagsIfNotExists(postHashtags);
+      if (postHashtags) {
+        await createHashtagsIfNotExists(postHashtags);
 
-      hashtags = await getHashtagsFromDatabase(postHashtags);
+        hashtags = await getHashtagsFromDatabase(postHashtags);
+      }
     }
 
     let linkMetadata = {};
@@ -133,7 +135,7 @@ export async function createPost(request, response) {
 
     await postRepository.createPost(infoPost, linkMetadata, idUser);
 
-    if (hashtags) {
+    if (infoPost.description && hashtags) {
       await associateHashtagsToPost(idUser, hashtags);
     }
 
