@@ -45,3 +45,38 @@ CREATE TABLE "likes_posts" (
 	ON DELETE CASCADE
  	ON UPDATE CASCADE
 );
+
+
+CREATE TABLE "follows" (
+	"id" integer,
+	"userId" integer NOT NULL,
+	"followersId" integer NOT NULL
+);
+
+
+CREATE TABLE "comments" (
+	"id" integer,
+	"userId" integer NOT NULL
+);
+
+
+CREATE TABLE "public.comments_post" (
+	"id" integer,
+	"commentId" integer NOT NULL,
+	"postId" integer NOT NULL
+);
+
+
+CREATE TABLE "public.shares" (
+	"id" integer,
+	"userId" integer NOT NULL
+);
+
+
+CREATE TABLE "public.shares_post" (
+	"id" integer,
+	"shareId" integer NOT NULL,
+	"postId" integer NOT NULL
+);
+
+
