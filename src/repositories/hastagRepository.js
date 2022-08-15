@@ -35,7 +35,8 @@ async function rankingHastags(sum, hastag) {
     `
   SELECT h.name FROM hastags h 
   GROUP BY h.id
-  ORDER BY views DESC
+  ORDER BY h.views DESC
+  LIMIT 10
   `,
     []
   );
