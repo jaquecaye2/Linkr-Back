@@ -1,30 +1,15 @@
-import pg from "pg";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const user = 'postgres';
-const password = process.env.DB_PASSWORD;
-const host = 'localhost';
-const port = 5432;
-const database = 'linkr';
+import pg from 'pg';
 
 const { Pool } = pg;
 
-const configDatabase = {
-  user,
-  password,
-  host,
-  port,
-  database
-};
+const databaseConfig = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+}
 
- if(process.env.MODE === "PROD") {
-  configDatabase.ssl = {
-    rejectUnauthorized: false
-  }
-} 
+const db = new Pool(databaseConfig);
 
-const db = new Pool(configDatabase);
 export default db;
 
