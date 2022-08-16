@@ -83,7 +83,7 @@ export async function deletePost(request, response) {
     }
 
     const postOwner = await postRepository.findPostOwner(idUser, id);
-    console.log(postOwner);
+    
     if (postOwner.length === 0) {
       return response.sendStatus(401);
     }
@@ -150,8 +150,6 @@ export async function showPosts(request, response) {
   try {
     const page  = request.query.page
 
-    console.log(page)
-
     if (page && page < 1){
       response.status(400).send("Informe uma página válida!")
       return
@@ -165,10 +163,9 @@ export async function showPosts(request, response) {
     }
 
     const limit = 3
-    const start = (page - 1) * limit
     const end = page * limit
 
-    if (posts.length <= 3){
+    if (posts.length <= 10){
       response.status(201).send(posts);
       return
     } else {
