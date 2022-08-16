@@ -32,6 +32,14 @@ export async function creatComment(req, res) {
     }
 }
 
+//pra puxar as info dos users dos posts por foto usar a query 
+/* 
+SELECT u.name,u.picture,p.user_id,p.id FROM posts p 
+JOIN users u ON u.id = p.user_id
+JOIN comments_posts cp ON cp.post_id = p.id
+ WHERE p.id = $1;
+*/
+
 
 export async function showAllCommentsNumber(req, res) {
     const { postId } = req.body;
