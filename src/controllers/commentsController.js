@@ -25,8 +25,11 @@ export async function creatComment(req, res) {
 
 
 export async function showAllCommentsNumber(req,res){
+    const { postId } = req.body;
 try{
-    res.sendStatus(httpStatus.OK)
+    const {rows: comments} = await commentRepository.getAllPost_comments(postId)
+ 
+    res.status(httpStatus.OK).send(comments[0])
 }catch(e){
     console.log(e)
     res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)

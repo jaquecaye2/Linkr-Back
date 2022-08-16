@@ -58,11 +58,28 @@ async function findCommentId(comment,userId) {
     }
 }
 
+
+async function getAllPost_comments(postId) {
+    try {
+        return db.query(
+            `
+         SELECT COUNT(comment_id) AS totalComments FROM comments_post cp WHERE cp.post_id = $1 
+          `,
+            [postId]
+        );
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
+
 const commentRepository = {
     insertComment,
     verifyUserId,
     insertRelationPost,
-    findCommentId
+    findCommentId,
+    getAllPost_comments
 };
 
 
