@@ -99,7 +99,7 @@ async function userFollowers(user_id) {
     try {
         return db.query(
             `
-       SELECT * FROM follows f
+       SELECT followers_id AS follower FROM follows f
        JOIN users u ON u.id = f.followers_id
        WHERE  f.user_id =  $1
           `,
