@@ -2,7 +2,7 @@ import httpStatus from "../utils/httpStatus.js";
 import commentRepository from "../repositories/commentRepository.js";
 
 export async function creatComment(req, res) {
-    const { comment } = req.body;
+    const { comment, postId } = req.body;
     const idUser = res.locals.idUser;//id do usuario que está comentando
     try {
         const isUserExistent = await commentRepository.verifyUserId(idUser)
@@ -11,10 +11,24 @@ export async function creatComment(req, res) {
         }
         await commentRepository.insertComment(idUser, comment)
 
+        const {rows: commentId} = await commentRepository.findCommentId(comment,idUser)
+        
+        await commentRepository.insertRelationPost(commentId[0].id,postId) 
+
         res.sendStatus(httpStatus.OK)
 
     } catch (e) {
         console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
+}
+
+
+export async function showAllCommentsNumber(req,res){
+try{
+    res.sendStatus(httpStatus.OK)
+}catch(e){
+    console.log(e)
+    res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
+}
 }

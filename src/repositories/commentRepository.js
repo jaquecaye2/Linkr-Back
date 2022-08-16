@@ -29,9 +29,40 @@ async function insertComment(userId,text) {
     }
 }
 
+async function insertRelationPost(commentId,postId) {
+    try {
+        return db.query(
+            `
+          INSERT INTO comments_post (comment_id,post_id) VALUES ($1,$2);
+          `,
+            [commentId,postId]
+        );
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
+
+async function findCommentId(comment,userId) {
+    try {
+        return db.query(
+            `
+         SELECT * FROM comments c  WHERE c.comment = $1 AND c.user_id = $2
+          `,
+            [comment,userId]
+        );
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
 const commentRepository = {
     insertComment,
-    verifyUserId
+    verifyUserId,
+    insertRelationPost,
+    findCommentId
 };
 
 
