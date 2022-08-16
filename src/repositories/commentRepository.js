@@ -73,14 +73,33 @@ async function getAllPost_comments(postId) {
     }
 }
 
+async function postAuthor(postId) {
+    try {
+        return db.query(
+            `
+        SELECT * FROM posts p
+        JOIN comments_post cp ON cp.post_id = p.id
+        JOIN users u ON u.id = p.user_id
+        WHERE p.id = $1
+          `,
+            [postId]
+        );
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
 
 const commentRepository = {
     insertComment,
     verifyUserId,
     insertRelationPost,
     findCommentId,
-    getAllPost_comments
+    getAllPost_comments,
+    postAuthor
 };
 
 
 export default commentRepository;
+

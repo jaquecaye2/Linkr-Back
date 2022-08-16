@@ -11,11 +11,19 @@ export async function creatComment(req, res) {
         }
         await commentRepository.insertComment(idUser, comment)
 
-        const {rows: commentId} = await commentRepository.findCommentId(comment,idUser)
-        
-        await commentRepository.insertRelationPost(commentId[0].id,postId) 
+        const { rows: commentId } = await commentRepository.findCommentId(comment, idUser)
 
-        res.sendStatus(httpStatus.OK)
+        await commentRepository.insertRelationPost(commentId[0].id, postId)
+
+        const author = await commentRepository.postAuthor(postId)
+    
+        if (author.rows[0].user_id === idUser) {
+            return res.status(httpStatus.OK).send({ author: "post's author" })
+        }else{
+            return res.sendStatus(httpStatus.OK)
+        }
+        
+
 
     } catch (e) {
         console.log(e)
