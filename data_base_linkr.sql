@@ -49,7 +49,7 @@ CREATE TABLE "likes_posts" (
 
 CREATE TABLE "follows" (
 	"id" SERIAL PRIMARY KEY,
-	"user_Id" integer NOT NULL  REFERENCES "users"("id"),
+	"user_id" integer NOT NULL  REFERENCES "users"("id"),
 	"followers_id" integer NOT NULL  REFERENCES "users"("id")
 );
 
