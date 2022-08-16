@@ -9,8 +9,9 @@ export async function creatComment(req, res) {
     
 
         const isPostExistent = await commentRepository.isPostExistent(postId)
+        console.log(isPostExistent)
         const isUserExistent = await commentRepository.verifyUserId(idUser)
-        if (isUserExistent.rowCount === 0 || !isPostExistent[0]) {
+        if (isUserExistent.rowCount === 0 || isPostExistent.rowCount === 0) {
             return res.sendStatus(httpStatus.NOT_FOUND)
         }
 
