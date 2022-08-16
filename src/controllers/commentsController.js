@@ -16,15 +16,12 @@ export async function creatComment(req, res) {
         await commentRepository.insertRelationPost(commentId[0].id, postId)
 
         const author = await commentRepository.postAuthor(postId)
-    
+
         if (author.rows[0].user_id === idUser) {
             return res.status(httpStatus.OK).send({ author: "post's author" })
-        }else{
+        } else {
             return res.sendStatus(httpStatus.OK)
         }
-        
-
-
     } catch (e) {
         console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
@@ -32,14 +29,14 @@ export async function creatComment(req, res) {
 }
 
 
-export async function showAllCommentsNumber(req,res){
+export async function showAllCommentsNumber(req, res) {
     const { postId } = req.body;
-try{
-    const {rows: comments} = await commentRepository.getAllPost_comments(postId)
- 
-    res.status(httpStatus.OK).send(comments[0])
-}catch(e){
-    console.log(e)
-    res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
-}
+    try {
+        const { rows: comments } = await commentRepository.getAllPost_comments(postId)
+
+        res.status(httpStatus.OK).send(comments[0])
+    } catch (e) {
+        console.log(e)
+        res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
+    }
 }
