@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const commentsSchema = Joi.object({
-    text: Joi.string().allow("").optional()
+    comment: Joi.string().optional()
 })
 
 export default commentsSchema
