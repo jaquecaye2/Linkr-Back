@@ -56,27 +56,28 @@ CREATE TABLE "follows" (
 
 CREATE TABLE "comments" (
 	"id" integer,
-	"userId" integer NOT NULL
+	"user_id" integer NOT NULL
+	"Text" VARCHAR(200) 
 );
 
 
-CREATE TABLE "public.comments_post" (
+CREATE TABLE "comments_post" (
 	"id" integer,
-	"commentId" integer NOT NULL,
-	"postId" integer NOT NULL
+	"comment_id" integer NOT NULL,
+	"post_id" integer NOT NULL
 );
 
 
-CREATE TABLE "public.shares" (
+CREATE TABLE "shares" (
 	"id" integer,
-	"userId" integer NOT NULL
+	"user_id" integer NOT NULL
 );
 
 
-CREATE TABLE "public.shares_post" (
+CREATE TABLE "shares_post" (
 	"id" integer,
-	"shareId" integer NOT NULL,
-	"postId" integer NOT NULL
+	"share_id" integer NOT NULL,
+	"post_id" integer NOT NULL
 );
 
 
