@@ -77,6 +77,19 @@ async function getAllPost_comments(postId) {
     }
 }
 
+async function isPostExistent(id) {
+  try {
+   return db.query(
+      `
+        SELECT * FROM posts WHERE id = $1
+      `,
+      [id]
+    );
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
 async function postAuthor(postId) {
     try {
         return db.query(
@@ -118,7 +131,8 @@ const commentRepository = {
     findCommentId,
     getAllPost_comments,
     postAuthor,
-    userFollowers
+    userFollowers,
+    isPostExistent
 };
 
 

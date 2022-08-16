@@ -1,18 +1,22 @@
 import httpStatus from "../utils/httpStatus.js";
 import commentRepository from "../repositories/commentRepository.js";
 
+
 export async function creatComment(req, res) {
     const { comment, postId } = req.body;
     const idUser = res.locals.idUser;//id do usuario que está comentando
     try {
+    
+
+        const isPostExistent = await commentRepository.isPostExistent(postId)
         const isUserExistent = await commentRepository.verifyUserId(idUser)
-        if (isUserExistent.rowCount === 0) {
-            res.status(httpStatus.NOT_FOUND)
+        if (isUserExistent.rowCount === 0 || !isPostExistent[0]) {
+            return res.sendStatus(httpStatus.NOT_FOUND)
         }
+
         await commentRepository.insertComment(idUser, comment)
 
         const { rows: commentId } = await commentRepository.findCommentId(comment, idUser)
-
         await commentRepository.insertRelationPost(commentId[0].id, postId)
 
         const author = await commentRepository.postAuthor(postId)
