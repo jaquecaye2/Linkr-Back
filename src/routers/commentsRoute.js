@@ -7,7 +7,7 @@ import schemaValidator from "../middlewares/schemaValidator.js"
 const commentsRoute = Router()
 
 commentsRoute.post("/comment", tokenValidator, schemaValidator(commentsSchema), creatComment);
-commentsRoute.post("/comments", showAllCommentsNumber);
+commentsRoute.post("/comments",tokenValidator, showAllCommentsNumber);
 commentsRoute.get("/comments",tokenValidator, authorFollowers);
 
 export default commentsRoute;
