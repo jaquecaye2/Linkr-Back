@@ -42,6 +42,7 @@ export async function showAllCommentsNumber(req, res) {
     }
 }
 
+
 export async function getUsersComments(req, res) {
     const { postId } = req.body;
     try {
@@ -56,13 +57,10 @@ export async function getUsersComments(req, res) {
     }
 }
 
-export async function authorFollowers(req, res) {
-    const idUser = res.locals.idUser;
-    console.log(idUser)
-    try {
-        const { rows: follows } = await commentRepository.userFollowers(idUser)
 
-        res.status(httpStatus.OK).send(follows)
+export async function authorFollowers(req,res){
+    try {
+        res.sendStatus(httpStatus.OK)
     } catch (e) {
         console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
