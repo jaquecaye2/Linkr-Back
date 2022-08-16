@@ -71,3 +71,4 @@ CREATE TABLE "shares_post" (
 	"share_id" integer NOT NULL REFERENCES "shares"("id"),
 	"post_id" integer NOT NULL  REFERENCES "posts"("id")
 );
+

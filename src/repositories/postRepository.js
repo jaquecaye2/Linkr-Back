@@ -31,7 +31,6 @@ async function getLastPostByUserId(userId) {
   );
 }
 
-
 async function showPosts() {
   try {
     return await db.query(
@@ -185,7 +184,7 @@ const postRepository = {
   updatePost,
   findPostOwner,
   deletePostLikes,
-  getLastPostByUserId
+  getLastPostByUserId,
 };
 
 export default postRepository;
