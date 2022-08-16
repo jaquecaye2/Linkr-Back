@@ -48,34 +48,34 @@ CREATE TABLE "likes_posts" (
 
 
 CREATE TABLE "follows" (
-	"id" integer,
+	"id" SERIAL PRIMARY KEY,
 	"userId" integer NOT NULL,
 	"followersId" integer NOT NULL
 );
 
 
 CREATE TABLE "comments" (
-	"id" integer,
+	"id" SERIAL PRIMARY KEY,
 	"user_id" integer NOT NULL
-	"Text" VARCHAR(200) 
+	"comment" VARCHAR(200) 
 );
 
 
 CREATE TABLE "comments_post" (
-	"id" integer,
+	"id" SERIAL PRIMARY KEY,
 	"comment_id" integer NOT NULL,
 	"post_id" integer NOT NULL
 );
 
 
 CREATE TABLE "shares" (
-	"id" integer,
+	"id" SERIAL PRIMARY KEY,
 	"user_id" integer NOT NULL
 );
 
 
 CREATE TABLE "shares_post" (
-	"id" integer,
+	"id" SERIAL PRIMARY KEY,
 	"share_id" integer NOT NULL,
 	"post_id" integer NOT NULL
 );
