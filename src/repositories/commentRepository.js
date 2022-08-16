@@ -128,7 +128,7 @@ async function getUsersCommentsInfo(postId) {
     try {
         return db.query(
             `
-            SELECT u.name, u.picture,c.comment,c.user_id,p.id AS post_id 
+            SELECT u.name, u.picture,c.comment,c.user_id,p.id AS post_id, p.user_id AS ownerPost 
             FROM comments_post cp
             JOIN comments c ON c.id = cp.comment_Id
             JOIN posts p ON p.id = cp.post_id
