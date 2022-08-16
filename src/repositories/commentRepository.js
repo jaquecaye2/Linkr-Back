@@ -124,6 +124,7 @@ async function userFollowers(user_id) {
     }
 }
 
+
 async function getUsersCommentsInfo(postId) {
     try {
         return db.query(
