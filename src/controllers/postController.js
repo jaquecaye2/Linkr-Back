@@ -148,6 +148,15 @@ export async function createPost(request, response) {
 
 export async function showPosts(request, response) {
   try {
+    const page  = request.query.page
+
+    console.log(page)
+
+    if (page && page < 1){
+      response.status(400).send("Informe uma página válida!")
+      return
+    }
+
     const { rows: posts } = await postRepository.showPosts();
 
     if (posts.length === 0) {
@@ -155,7 +164,18 @@ export async function showPosts(request, response) {
       return;
     }
 
-    response.status(201).send(posts);
+    const limit = 3
+    const start = (page - 1) * limit
+    const end = page * limit
+
+    if (posts.length <= 3){
+      response.status(201).send(posts);
+      return
+    } else {
+      response.status(201).send(posts.slice(0, end))
+      return
+    }
+    
   } catch (error) {
     console.log(error);
     response
