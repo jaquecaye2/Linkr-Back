@@ -48,7 +48,9 @@ async function findCommentId(comment,userId) {
     try {
         return db.query(
             `
-         SELECT * FROM comments c  WHERE c.comment = $1 AND c.user_id = $2
+         SELECT * FROM comments c  
+         WHERE c.comment = $1 
+         AND c.user_id = $2
           `,
             [comment,userId]
         );
@@ -63,7 +65,9 @@ async function getAllPost_comments(postId) {
     try {
         return db.query(
             `
-         SELECT COUNT(comment_id) AS totalComments FROM comments_post cp WHERE cp.post_id = $1 
+         SELECT COUNT(comment_id) AS totalComments 
+         FROM comments_post cp 
+         WHERE cp.post_id = $1 
           `,
             [postId]
         );
@@ -91,13 +95,30 @@ async function postAuthor(postId) {
 }
 
 
+async function userFollowers(user_id) {
+    try {
+        return db.query(
+            `
+       SELECT * FROM follows f
+       JOIN users u ON u.id = f.followers_id
+       WHERE  f.user_id =  $1
+          `,
+            [user_id]
+        );
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
 const commentRepository = {
     insertComment,
     verifyUserId,
     insertRelationPost,
     findCommentId,
     getAllPost_comments,
-    postAuthor
+    postAuthor,
+    userFollowers
 };
 
 
