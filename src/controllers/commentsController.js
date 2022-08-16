@@ -9,8 +9,9 @@ export async function creatComment(req, res) {
     
 
         const isPostExistent = await commentRepository.isPostExistent(postId)
+        console.log(isPostExistent)
         const isUserExistent = await commentRepository.verifyUserId(idUser)
-        if (isUserExistent.rowCount === 0 || !isPostExistent[0]) {
+        if (isUserExistent.rowCount === 0 || isPostExistent.rowCount === 0) {
             return res.sendStatus(httpStatus.NOT_FOUND)
         }
 
@@ -31,14 +32,6 @@ export async function creatComment(req, res) {
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
-
-//pra puxar as info dos users dos posts por foto usar a query 
-/* 
-SELECT u.name,u.picture,p.user_id,p.id FROM posts p 
-JOIN users u ON u.id = p.user_id
-JOIN comments_posts cp ON cp.post_id = p.id
- WHERE p.id = $1;
-*/
 
 
 export async function showAllCommentsNumber(req, res) {
