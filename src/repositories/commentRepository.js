@@ -124,6 +124,25 @@ async function userFollowers(user_id) {
     }
 }
 
+async function getUsersCommentsInfo(postId) {
+    try {
+        return db.query(
+            `
+            SELECT u.name, u.picture,c.comment,c.user_id,p.id AS post_id 
+            FROM comments_post cp
+            JOIN comments c ON c.id = cp.comment_Id
+            JOIN posts p ON p.id = cp.post_id
+            JOIN users u ON u.id = c.user_id
+            WHERE cp.post_id = $1
+          `,
+            [postId]
+        );
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
 const commentRepository = {
     insertComment,
     verifyUserId,
@@ -132,7 +151,8 @@ const commentRepository = {
     getAllPost_comments,
     postAuthor,
     userFollowers,
-    isPostExistent
+    isPostExistent,
+    getUsersCommentsInfo
 };
 
 

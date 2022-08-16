@@ -32,18 +32,6 @@ export async function creatComment(req, res) {
     }
 }
 
-
-
-//pra puxar as info dos users dos posts por foto usar a query 
-/* 
-linkr=# SELECT u.name, u.picture,c.comment,c.user_id,p.id  FROM comments_post cp
-JOIN comments c ON c.id = cp.comment_Id
-JOIN posts p ON p.id = cp.post_id
-JOIN users u ON u.id = c.user_id
-WHERE cp.post_id = $1
-
-*/
-
 export async function showAllCommentsNumber(req, res) {
     const { postId } = req.body;
     try {
@@ -57,8 +45,10 @@ export async function showAllCommentsNumber(req, res) {
 }
 
 export async function getUsersComments(req,res){
+    const { postId } = req.body;
     try{
-        res.sendStatus(httpStatus.OK)
+       const  {rows: users } = await commentRepository.getUsersCommentsInfo(postId)
+        res.status(httpStatus.OK).send(users)
     }catch(e){
         console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
