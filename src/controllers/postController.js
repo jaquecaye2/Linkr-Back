@@ -110,10 +110,10 @@ export async function createPost(request, response) {
       infoPost.description = null;
     }
 
+    let hashtags;
+
     if (infoPost.description) {
       const postHashtags = getPostHashtags(infoPost.description);
-
-      let hashtags;
 
       if (postHashtags) {
         await createHashtagsIfNotExists(postHashtags);

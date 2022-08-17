@@ -23,6 +23,7 @@ async function getUsers(req, res) {
 }
 
 async function redirectToUser(req, res) {
+  const { idUser: idLoggedUser } = res.locals;
   const { id } = req.params;
 
   const page = req.query.page;
@@ -39,16 +40,18 @@ async function redirectToUser(req, res) {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
 
-    const user = await userRepository.getUsersWithId(id);
+    const user = await userRepository.getUsersWithId(idLoggedUser, id);
 
     const limit = 10;
     const end = page * limit;
 
-    if (user.length <= 10) {
+    if (user.posts.length <= 10) {
       res.status(httpStatus.OK).send(user);
       return;
     } else {
-      res.status(httpStatus.OK).send(user.slice(0, end));
+      user.posts = user.posts.slice(0, end);
+
+      res.status(httpStatus.OK).send(user);
       return;
     }
   } catch (error) {
@@ -58,6 +61,7 @@ async function redirectToUser(req, res) {
 }
 
 async function allPosts(req, res) {
+  const { idUser: idLoggedUser } = res.locals;
   const { id } = req.params;
 
   try {
@@ -67,7 +71,7 @@ async function allPosts(req, res) {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
 
-    const user = await userRepository.getUsersWithId(id);
+    const user = await userRepository.getUsersWithId(idLoggedUser, id);
 
     res.status(httpStatus.OK).send(user);
     return;
