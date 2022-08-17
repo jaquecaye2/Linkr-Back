@@ -9,6 +9,6 @@ const commentsRoute = Router()
 commentsRoute.post("/comment", tokenValidator, schemaValidator(commentsSchema), creatComment);
 commentsRoute.post("/comments",tokenValidator, showAllCommentsNumber);
 commentsRoute.get("/comments",tokenValidator, authorFollowers);
-commentsRoute.get("/comments/users", getUsersComments);
+commentsRoute.get("/comments/users/:postId", getUsersComments);
 
 export default commentsRoute;

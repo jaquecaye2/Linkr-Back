@@ -44,7 +44,8 @@ export async function showAllCommentsNumber(req, res) {
 
 
 export async function getUsersComments(req, res) {
-    const { postId } = req.body;
+    const { postId } = req.params;
+    console.log(postId)
     try {
         const users = await commentRepository.getUsersCommentsInfo(postId)
         if (users.rowCount === 0) {
