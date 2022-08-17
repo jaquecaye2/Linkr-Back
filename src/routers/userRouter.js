@@ -12,4 +12,6 @@ userRouter.get("/users/:id", tokenValidator, userController.redirectToUser);
 userRouter.post("/users/:id/follow", tokenValidator, userController.follow);
 userRouter.post("/users/:id/unfollow", tokenValidator, userController.unfollow);
 
+userRouter.get("/users2/:id", tokenValidator, userController.allPosts);
+
 export default userRouter;

@@ -42,8 +42,10 @@ CREATE TABLE "likes_posts" (
 );
 
 CREATE TABLE "follows" (
-	"user_id" INTEGER NOT NULL REFERENCES "users"("id"),
-	"followers_id" INTEGER NOT NULL CHECK("followers_id" <> "user_id") REFERENCES "users"("id"),
+	"user_id" INTEGER NOT NULL REFERENCES "users"("id")
+	ON DELETE CASCADE,
+	"followers_id" INTEGER NOT NULL CHECK("followers_id" <> "user_id") REFERENCES "users"("id")
+	ON DELETE CASCADE,
 	PRIMARY KEY ("user_id", "followers_id")
 );
 
@@ -69,3 +71,4 @@ CREATE TABLE "shares_post" (
 	"share_id" integer NOT NULL REFERENCES "shares"("id"),
 	"post_id" integer NOT NULL  REFERENCES "posts"("id")
 );
+

@@ -1,7 +1,8 @@
 import Joi from "joi";
 
 const commentsSchema = Joi.object({
-    text: Joi.string().allow("").optional()
+    comment: Joi.string().required(),
+    postId: Joi.number().required()
 })
 
 export default commentsSchema

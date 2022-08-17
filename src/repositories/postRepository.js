@@ -34,7 +34,7 @@ async function getLastPostByUserId(userId) {
 async function showPosts() {
   try {
     return await db.query(
-      "SELECT posts.id, name, picture, description, link_title, link_description, link_image, link, posts.user_id FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.created_at DESC LIMIT 20"
+      "SELECT posts.id, name, picture, description, link_title, link_description, link_image, link, posts.user_id FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.created_at DESC"
     );
   } catch (error) {
     return false;
