@@ -61,21 +61,6 @@ async function findCommentId(comment,userId) {
 }
 
 
-async function getAllPost_comments(postId) {
-    try {
-        return db.query(
-            `
-         SELECT COUNT(comment_id) AS totalComments 
-         FROM comments_post cp 
-         WHERE cp.post_id = $1 
-          `,
-            [postId]
-        );
-    } catch (error) {
-        console.log(error)
-        return false;
-    }
-}
 
 async function isPostExistent(id) {
   try {
@@ -148,7 +133,6 @@ const commentRepository = {
     verifyUserId,
     insertRelationPost,
     findCommentId,
-    getAllPost_comments,
     postAuthor,
     userFollowers,
     isPostExistent,
