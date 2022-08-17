@@ -35,7 +35,7 @@ export async function showAllCommentsNumber(req, res) {
     try {
         const { rows: comments } = await commentRepository.getAllPost_comments(postId)
 
-        res.status(httpStatus.OK).send(comments[0])
+        res.status(httpStatus.OK).send(comments)
     } catch (e) {
         console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
@@ -45,7 +45,6 @@ export async function showAllCommentsNumber(req, res) {
 
 export async function getUsersComments(req, res) {
     const { postId } = req.params;
-    console.log(postId)
     try {
         const users = await commentRepository.getUsersCommentsInfo(postId)
         if (users.rowCount === 0) {
