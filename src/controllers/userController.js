@@ -43,6 +43,8 @@ async function redirectToUser(req, res) {
   }
 }
 
+
+
 export default {
   redirectToUser,
   getUsers

@@ -25,7 +25,6 @@ export async function creatComment(req, res) {
             return res.sendStatus(httpStatus.OK)
         }
     } catch (e) {
-        console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
@@ -40,15 +39,16 @@ export async function getUsersComments(req, res) {
         }
         res.status(httpStatus.OK).send(users.rows)
     } catch (e) {
-        console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
 
 export async function authorFollowers(req,res){
+    const idUser = res.locals.idUser;
     try {
-        res.sendStatus(httpStatus.OK)
+        const  { rows : userFollower } = await commentRepository.followUser(idUser)
+        res.status(httpStatus.OK).send(userFollower)
     } catch (e) {
         console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)

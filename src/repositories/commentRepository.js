@@ -10,7 +10,6 @@ async function verifyUserId(userId) {
             [userId]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -24,7 +23,6 @@ async function insertComment(userId,text) {
             [userId,text]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -38,7 +36,6 @@ async function insertRelationPost(commentId,postId) {
             [commentId,postId]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -55,7 +52,6 @@ async function findCommentId(comment,userId) {
             [comment,userId]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -71,7 +67,6 @@ async function isPostExistent(id) {
       [id]
     );
   } catch (e) {
-    console.log(e);
     return false;
   }
 }
@@ -87,7 +82,6 @@ async function postAuthor(postId) {
             [postId]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -104,10 +98,10 @@ async function userFollowers(user_id) {
             [user_id]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
+
 
 async function getUsersCommentsInfo(postId) {
     try {
@@ -123,10 +117,27 @@ async function getUsersCommentsInfo(postId) {
             [postId]
         );
     } catch (error) {
+        return false;
+    }
+}
+
+async function followUser(userId) {
+    try {
+        return db.query(
+            `
+            SELECT followers_id AS seguindo
+            FROM follows 
+            WHERE user_id = $1 ;
+          `,
+            [userId]
+        );
+    } catch (error) {
         console.log(error)
         return false;
     }
 }
+     
+  
 
 const commentRepository = {
     insertComment,
@@ -136,7 +147,8 @@ const commentRepository = {
     postAuthor,
     userFollowers,
     isPostExistent,
-    getUsersCommentsInfo
+    getUsersCommentsInfo,
+    followUser
 };
 
 
