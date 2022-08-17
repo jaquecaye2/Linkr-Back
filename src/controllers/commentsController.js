@@ -34,11 +34,10 @@ export async function getUsersComments(req, res) {
     const { postId } = req.params;
     try {
         const users = await commentRepository.getUsersCommentsInfo(postId)
-        if (users.rowCount === 0) {
-            return res.sendStatus(httpStatus.NOT_FOUND)
-        }
+    
         res.status(httpStatus.OK).send(users.rows)
     } catch (e) {
+        console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }

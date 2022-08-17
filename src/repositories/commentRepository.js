@@ -127,7 +127,7 @@ async function followUser(userId) {
             `
             SELECT followers_id AS seguindo
             FROM follows 
-            WHERE user_id = $1 ;
+            WHERE user_id = $1;
           `,
             [userId]
         );
