@@ -162,7 +162,7 @@ export async function showPosts(request, response) {
       return;
     }
 
-    const limit = 3
+    const limit = 10
     const end = page * limit
 
     if (posts.length <= 10){
