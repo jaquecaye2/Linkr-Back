@@ -1,4 +1,3 @@
-
 import userRepository from "../repositories/userRepository.js";
 import httpStatus from "../utils/httpStatus.js";
 
@@ -9,7 +8,7 @@ async function getUsers(req, res) {
   try {
     const users = await userRepository.getUsersWithName(name);
 
-    console.log(users)
+    console.log(users);
 
     if (users.length === ZERO) {
       res.sendStatus(httpStatus.NOT_FOUND);
@@ -26,32 +25,52 @@ async function getUsers(req, res) {
 async function redirectToUser(req, res) {
   const { id } = req.params;
 
-  const page  = req.query.page
+  const page = req.query.page;
 
   try {
-    if (page && page < 1){
-      res.status(400).send("Informe uma página válida!")
-      return
+    if (page && page < 1) {
+      res.status(400).send("Informe uma página válida!");
+      return;
     }
 
-    const isUserExistent = await userRepository.verifyUserId(id)
+    const isUserExistent = await userRepository.verifyUserId(id);
 
     if (!isUserExistent[0]) {
-      return res.sendStatus(httpStatus.NOT_FOUND)
+      return res.sendStatus(httpStatus.NOT_FOUND);
     }
-    
-    const user = await userRepository.getUsersWithId(id)
 
-    const limit = 10
-    const end = page * limit
+    const user = await userRepository.getUsersWithId(id);
 
-    if (user.length <= 10){
+    const limit = 10;
+    const end = page * limit;
+
+    if (user.length <= 10) {
       res.status(httpStatus.OK).send(user);
-      return
+      return;
     } else {
-      res.status(httpStatus.OK).send(user.slice(0, end))
-      return
+      res.status(httpStatus.OK).send(user.slice(0, end));
+      return;
     }
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+async function allPosts(req, res) {
+  const { id } = req.params;
+
+  try {
+    const isUserExistent = await userRepository.verifyUserId(id);
+
+    if (!isUserExistent[0]) {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+
+    const user = await userRepository.getUsersWithId(id);
+
+    res.status(httpStatus.OK).send(user);
+    return;
   } catch (error) {
     console.log(error);
     res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
@@ -60,5 +79,6 @@ async function redirectToUser(req, res) {
 
 export default {
   redirectToUser,
-  getUsers
+  getUsers,
+  allPosts,
 };
