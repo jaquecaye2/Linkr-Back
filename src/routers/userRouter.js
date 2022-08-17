@@ -11,4 +11,6 @@ userRouter.get("/users", userController.getUsers);
 
 userRouter.get("/users/:id", tokenValidator, userController.redirectToUser );
 
+userRouter.get("/users2/:id", tokenValidator, userController.allPosts );
+
 export default userRouter;

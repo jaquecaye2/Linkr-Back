@@ -83,7 +83,7 @@ export async function deletePost(request, response) {
     }
 
     const postOwner = await postRepository.findPostOwner(idUser, id);
-    console.log(postOwner);
+
     if (postOwner.length === 0) {
       return response.sendStatus(401);
     }
@@ -148,6 +148,42 @@ export async function createPost(request, response) {
 
 export async function showPosts(request, response) {
   try {
+    const page = request.query.page;
+
+    if (page && page < 1) {
+      response.status(400).send("Informe uma página válida!");
+      return;
+    }
+
+    const { rows: posts } = await postRepository.showPosts();
+
+    if (posts.length === 0) {
+      response.status(204).send("There are no posts yet");
+      return;
+    }
+
+    const limit = 10;
+    const end = page * limit;
+
+    if (posts.length <= 10) {
+      response.status(201).send(posts);
+      return;
+    } else {
+      response.status(201).send(posts.slice(0, end));
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+    response
+      .status(500)
+      .send(
+        "An error occured while trying to fetch the posts, please refresh the page"
+      );
+  }
+}
+
+export async function allPosts(request, response) {
+  try {
     const { rows: posts } = await postRepository.showPosts();
 
     if (posts.length === 0) {
@@ -156,6 +192,7 @@ export async function showPosts(request, response) {
     }
 
     response.status(201).send(posts);
+    return;
   } catch (error) {
     console.log(error);
     response
