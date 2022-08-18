@@ -77,6 +77,8 @@ async function allPosts(req, res) {
   }
 }
 
+
+
 export default {
   redirectToUser,
   getUsers,
