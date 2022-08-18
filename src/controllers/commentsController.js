@@ -47,6 +47,7 @@ export async function authorFollowers(req,res){
     const idUser = res.locals.idUser;
     try {
         const  { rows : userFollower } = await commentRepository.followUser(idUser)
+
         res.status(httpStatus.OK).send(userFollower)
     } catch (e) {
         console.log(e)
