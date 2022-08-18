@@ -16,11 +16,14 @@ async function getUsersWithName(name) {
 async function getUsersWithId(id) {
   const { rows: users } = await db.query(
     `
-    SELECT u.id, u.name, p.link, u.picture, p.description, p.id AS post_id, link_title, link_description, link_image 
-    FROM users u
-    JOIN posts P ON p.user_id = u.id
-    WHERE u.id = $1
-    ORDER BY p.id DESC LIMIT 20
+    SELECT u.id, u.name, p.link, u.picture, p.description, p.id AS post_id, 
+    link_title, link_description, link_image, COUNT(shares_post.post_id) AS countShared
+      FROM users u
+      JOIN posts P ON p.user_id = u.id
+      LEFT JOIN shares_post ON shares_post.post_id = P.id
+      WHERE u.id = $1
+     GROUP BY P.id, name, picture, u.id
+      ORDER BY p.id DESC LIMIT 20
   `,
     [id]
   );

@@ -157,6 +157,8 @@ export async function showPosts(request, response) {
 
     const { rows: posts } = await postRepository.showPosts();
 
+
+
     if (posts.length === 0) {
       response.status(204).send("There are no posts yet");
       return;
