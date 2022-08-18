@@ -33,8 +33,16 @@ async function getLastPostByUserId(userId) {
 
 async function showPosts() {
   try {
-    return await db.query(
-      "SELECT posts.id, name, picture, description, link_title, link_description, link_image, link, posts.user_id FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.created_at DESC LIMIT 20"
+    return await db.query(`
+    SELECT posts.id, name, picture, description, link_title, link_description, link_image, 
+	  link, posts.user_id, COUNT(shares_post.post_id) AS countShared
+	  FROM posts 
+	  JOIN users ON users.id = posts.user_id 
+	  JOIN shares_post ON shares_post.post_id = posts.id
+	  GROUP BY posts.id, name, picture
+	  ORDER BY posts.created_at DESC LIMIT 20
+    `
+
     );
   } catch (error) {
     return false;

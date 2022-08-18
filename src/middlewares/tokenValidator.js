@@ -8,6 +8,8 @@ export function tokenValidator(req, res, next){
         const headers = req.headers
         const secretKey = process.env.JWT_SECRET
         const token = headers.authorization?.split(" ")[1]
+
+        console.log(token)
         
         const {iduser} =  Jwt.verify(token, secretKey);
         
