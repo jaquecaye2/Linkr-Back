@@ -22,12 +22,13 @@ async function getUsersWithId(followerId, id) {
       users.id,
       users.name,
       users.picture,
-      CASE WHEN (SELECT COUNT(*) FROM follows WHERE user_id = $2 AND followers_id = $1) > 0 THEN true ELSE false END AS isFollowed,
+      CASE WHEN (SELECT COUNT(*) FROM follows WHERE user_id = $2 AND followers_id = $1) > 0 THEN true ELSE false END AS "isFollowed",
       ARRAY(
         SELECT row_to_json(posts_row)
         FROM (
-          SELECT posts.id, posts.link, posts.description, posts.link_title, posts.link_description, posts.link_image
+          SELECT users.name, users.picture, posts.id, posts.link, posts.description, posts.link_title, posts.link_description, posts.link_image
           FROM posts
+          JOIN users ON users.id = posts.user_id
           WHERE posts.user_id = $1
           ORDER BY posts.created_at DESC
         ) posts_row
