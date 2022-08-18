@@ -1,6 +1,8 @@
 import urlMetadata from "url-metadata";
 import postRepository from "../repositories/postRepository.js";
 import hastagRepository from "../repositories/hastagRepository.js";
+import userRepository from "../repositories/userRepository.js";
+import httpStatus from "../utils/httpStatus.js";
 
 function getPostHashtags(post) {
   const hashtagRegex = /#\w+/gm;
@@ -248,6 +250,53 @@ export async function howManyLikes(request, response) {
   } catch (error) {
     response
       .status(500)
+      .send(
+        "An error occured while trying to fetch the posts, please refresh the page"
+      );
+  }
+}
+
+export async function getPosts(req, res) {
+  const NO_RESULTS = 0;
+  const DEFAULT_LIMIT = 10;
+
+  const { idUser } = res.locals;
+  const { page, limit } = req.query;
+
+  try {
+    const followedsIdsResult = await userRepository.getFollowedsIdsByUserId(
+      idUser
+    );
+
+    if (followedsIdsResult.length === NO_RESULTS) {
+      res
+        .status(httpStatus.NOT_FOUND)
+        .send("You don't follow anyone yet. Search for new friends!");
+      return;
+    }
+
+    const followedsIds = followedsIdsResult.map(({ followedId }) => followedId);
+
+    const offset =
+      page && parseInt(page) > 0
+        ? (parseInt(page) - 1) * (limit || DEFAULT_LIMIT)
+        : 0;
+
+    const posts = await postRepository.getPostsByUsersIds(followedsIds, {
+      offset,
+      limit,
+    });
+
+    if (posts.length === NO_RESULTS) {
+      res.status(httpStatus.NOT_FOUND).send("No posts found from your friends");
+      return;
+    }
+
+    res.send(posts);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
       .send(
         "An error occured while trying to fetch the posts, please refresh the page"
       );
