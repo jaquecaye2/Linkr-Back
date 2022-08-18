@@ -10,7 +10,6 @@ async function verifyUserId(userId) {
             [userId]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -24,7 +23,6 @@ async function insertComment(userId,text) {
             [userId,text]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -38,7 +36,6 @@ async function insertRelationPost(commentId,postId) {
             [commentId,postId]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -55,27 +52,11 @@ async function findCommentId(comment,userId) {
             [comment,userId]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
 
 
-async function getAllPost_comments(postId) {
-    try {
-        return db.query(
-            `
-         SELECT COUNT(comment_id) AS totalComments 
-         FROM comments_post cp 
-         WHERE cp.post_id = $1 
-          `,
-            [postId]
-        );
-    } catch (error) {
-        console.log(error)
-        return false;
-    }
-}
 
 async function isPostExistent(id) {
   try {
@@ -86,7 +67,6 @@ async function isPostExistent(id) {
       [id]
     );
   } catch (e) {
-    console.log(e);
     return false;
   }
 }
@@ -102,7 +82,6 @@ async function postAuthor(postId) {
             [postId]
         );
     } catch (error) {
-        console.log(error)
         return false;
     }
 }
@@ -119,20 +98,57 @@ async function userFollowers(user_id) {
             [user_id]
         );
     } catch (error) {
+        return false;
+    }
+}
+
+
+async function getUsersCommentsInfo(postId) {
+    try {
+        return db.query(
+            `
+            SELECT u.name, u.picture,c.comment,c.user_id,p.id AS post_id, p.user_id AS ownerPost 
+            FROM comments_post cp
+            JOIN comments c ON c.id = cp.comment_Id
+            JOIN posts p ON p.id = cp.post_id
+            JOIN users u ON u.id = c.user_id
+            WHERE cp.post_id = $1
+          `,
+            [postId]
+        );
+    } catch (error) {
+        return false;
+    }
+}
+
+async function followUser(userId) {
+    try {
+        return db.query(
+            `
+            SELECT followers_id AS seguindo
+            FROM follows 
+            WHERE user_id = $1;
+          `,
+            [userId]
+        );
+    } catch (error) {
         console.log(error)
         return false;
     }
 }
+     
+  
 
 const commentRepository = {
     insertComment,
     verifyUserId,
     insertRelationPost,
     findCommentId,
-    getAllPost_comments,
     postAuthor,
     userFollowers,
-    isPostExistent
+    isPostExistent,
+    getUsersCommentsInfo,
+    followUser
 };
 
 

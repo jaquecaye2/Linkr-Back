@@ -6,10 +6,7 @@ export async function creatComment(req, res) {
     const { comment, postId } = req.body;
     const idUser = res.locals.idUser;//id do usuario que está comentando
     try {
-    
-
         const isPostExistent = await commentRepository.isPostExistent(postId)
-        console.log(isPostExistent)
         const isUserExistent = await commentRepository.verifyUserId(idUser)
         if (isUserExistent.rowCount === 0 || isPostExistent.rowCount === 0) {
             return res.sendStatus(httpStatus.NOT_FOUND)
@@ -28,27 +25,30 @@ export async function creatComment(req, res) {
             return res.sendStatus(httpStatus.OK)
         }
     } catch (e) {
-        console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
 
-export async function showAllCommentsNumber(req, res) {
-    const { postId } = req.body;
+export async function getUsersComments(req, res) {
+    const { postId } = req.params;
     try {
-        const { rows: comments } = await commentRepository.getAllPost_comments(postId)
-
-        res.status(httpStatus.OK).send(comments[0])
+        const users = await commentRepository.getUsersCommentsInfo(postId)
+    
+        res.status(httpStatus.OK).send(users.rows)
     } catch (e) {
         console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
+
 export async function authorFollowers(req,res){
+    const idUser = res.locals.idUser;
     try {
-        res.sendStatus(httpStatus.OK)
+        const  { rows : userFollower } = await commentRepository.followUser(idUser)
+
+        res.status(httpStatus.OK).send(userFollower)
     } catch (e) {
         console.log(e)
         res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
