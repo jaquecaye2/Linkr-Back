@@ -171,6 +171,17 @@ async function howManyLikes(post) {
   }
 }
 
+async function deleteComments_post(postId) {
+  try {
+    return await db.query(
+      "DELETE FROM comments_post WHERE post_id = $1",
+      [postId]
+    );
+  } catch (error) {
+    return false;
+  }
+}
+
 const postRepository = {
   createPost,
   showPosts,
@@ -185,6 +196,7 @@ const postRepository = {
   findPostOwner,
   deletePostLikes,
   getLastPostByUserId,
+  deleteComments_post
 };
 
 export default postRepository;

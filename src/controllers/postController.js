@@ -87,7 +87,8 @@ export async function deletePost(request, response) {
     if (postOwner.length === 0) {
       return response.sendStatus(401);
     }
-
+    await postRepository.deleteComments_post(id);
+    
     await postRepository.deletePosts_hastgs(id);
 
     await postRepository.deletePostLikes(id);
