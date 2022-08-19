@@ -22,7 +22,7 @@ async function getUsersWithId(id) {
       JOIN posts P ON p.user_id = u.id
       LEFT JOIN shares_post ON shares_post.post_id = P.id
       WHERE u.id = $1
-     GROUP BY P.id, name, picture, u.id
+     GROUP BY P.id, u.id
       ORDER BY p.id DESC LIMIT 20
   `,
     [id]

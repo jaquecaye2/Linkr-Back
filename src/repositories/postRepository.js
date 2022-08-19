@@ -106,6 +106,19 @@ async function deletePostLikes(postId) {
   return postLikes;
 }
 
+ async function deletePosts_shared(postId){
+  
+   return await db.query(
+    `
+    DELETE FROM shares_post
+    WHERE "post_id" = $1
+    
+    `,
+    [postId]
+  );
+
+ }
+
 async function deletePost(postId, userId) {
   const { rows: deletePostByiD } = await db.query(
     `
@@ -193,6 +206,7 @@ const postRepository = {
   findPostOwner,
   deletePostLikes,
   getLastPostByUserId,
+  deletePosts_shared
 };
 
 export default postRepository;

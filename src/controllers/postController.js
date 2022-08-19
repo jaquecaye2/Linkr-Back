@@ -92,6 +92,8 @@ export async function deletePost(request, response) {
 
     await postRepository.deletePostLikes(id);
 
+    await postRepository.deletePosts_shared(id)
+
     await postRepository.deletePost(id, idUser);
 
     response.sendStatus(204);
