@@ -159,7 +159,18 @@ export async function showPosts(request, response) {
 
     const { rows: posts } = await postRepository.showPosts();
 
+   console.log(posts)
 
+   posts.sort(function(a,b){
+    if(a.created_at>b.created_at){
+      return -1;
+    }
+    else{
+      return true
+    }
+   })
+
+   console.log(posts)
 
     if (posts.length === 0) {
       response.status(204).send("There are no posts yet");
