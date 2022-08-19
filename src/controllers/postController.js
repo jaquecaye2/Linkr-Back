@@ -282,10 +282,13 @@ export async function getPosts(req, res) {
         ? (parseInt(page) - 1) * (limit || DEFAULT_LIMIT)
         : 0;
 
-    const posts = await postRepository.getPostsByUsersIds(followedsIds, {
-      offset,
-      limit,
-    });
+    const posts = await postRepository.getPostsByUsersIds(
+      [...followedsIds, idUser],
+      {
+        offset,
+        limit,
+      }
+    );
 
     if (posts.length === NO_RESULTS) {
       res.status(httpStatus.NOT_FOUND).send("No posts found from your friends");
