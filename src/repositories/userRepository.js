@@ -1,13 +1,20 @@
 import db from "../db/db.js";
 
-async function getUsersWithName(name) {
+async function getUsersWithName(userId, name) {
   const { rows: users } = await db.query(
     `
-    SELECT id, name, email, picture
+    SELECT
+      id,
+      name,
+      email,
+      picture,
+      CASE WHEN (SELECT COUNT(*) FROM follows WHERE user_id = $1 AND followers_id = id) > 0 THEN true ELSE false END AS "isFollowed"
     FROM users
-    WHERE name ILIKE $1
+    WHERE name ILIKE $2 AND id <> $1
+    ORDER BY "isFollowed" DESC
+    LIMIT 10
   `,
-    [`%${name}%`]
+    [userId, `%${name}%`]
   );
 
   return users;

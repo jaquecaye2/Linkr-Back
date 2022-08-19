@@ -4,11 +4,10 @@ import httpStatus from "../utils/httpStatus.js";
 async function getUsers(req, res) {
   const ZERO = 0;
   const { name = "" } = req.query;
+  const { idUser } = res.locals;
 
   try {
-    const users = await userRepository.getUsersWithName(name);
-
-    console.log(users);
+    const users = await userRepository.getUsersWithName(idUser, name);
 
     if (users.length === ZERO) {
       res.sendStatus(httpStatus.NOT_FOUND);
