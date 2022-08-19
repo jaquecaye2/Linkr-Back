@@ -173,13 +173,29 @@ async function howManyLikes(post) {
 
 async function deleteComments_post(postId) {
   try {
-    return await db.query(
-      "DELETE FROM comments_post WHERE post_id = $1",
-      [postId]
-    );
+    return await db.query("DELETE FROM comments_post WHERE post_id = $1", [
+      postId,
+    ]);
   } catch (error) {
     return false;
   }
+}
+
+async function getPostsByUsersIds(usersIds, { limit = null, offset = 0 }) {
+  const { rows: posts } = await db.query(
+    `
+    SELECT posts.id, name, picture, description, link_title, link_description, link_image, link, posts.user_id
+    FROM posts
+    JOIN users ON users.id = posts.user_id
+    WHERE posts.user_id IN (${usersIds.join(", ")})
+    ORDER BY posts.created_at DESC
+    ${limit ? `LIMIT ${limit}` : ""}
+    OFFSET $1
+  `,
+    [offset]
+  );
+
+  return posts;
 }
 
 const postRepository = {
@@ -196,7 +212,8 @@ const postRepository = {
   findPostOwner,
   deletePostLikes,
   getLastPostByUserId,
-  deleteComments_post
+  deleteComments_post,
+  getPostsByUsersIds,
 };
 
 export default postRepository;

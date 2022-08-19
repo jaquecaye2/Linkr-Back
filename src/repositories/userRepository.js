@@ -88,6 +88,19 @@ async function unfollow(followerId, userTargetId) {
   );
 }
 
+async function getFollowedsIdsByUserId(userId) {
+  const { rows: followedsIds } = await db.query(
+    `
+    SELECT followers_id AS "followedId"
+    FROM follows
+    WHERE user_id = $1
+  `,
+    [userId]
+  );
+
+  return followedsIds;
+}
+
 export default {
   getUsersWithName,
   getUsersWithId,
@@ -95,4 +108,5 @@ export default {
   checkFollow,
   follow,
   unfollow,
+  getFollowedsIdsByUserId,
 };
