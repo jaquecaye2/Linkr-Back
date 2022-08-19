@@ -187,12 +187,12 @@ async function getPostsByUsersIds(usersIds, { limit = null, offset = 0 }) {
     SELECT posts.id, name, picture, description, link_title, link_description, link_image, link, posts.user_id
     FROM posts
     JOIN users ON users.id = posts.user_id
-    WHERE posts.user_id IN ($1)
+    WHERE posts.user_id IN (${usersIds.join(", ")})
     ORDER BY posts.created_at DESC
     ${limit ? `LIMIT ${limit}` : ""}
-    OFFSET $2
+    OFFSET $1
   `,
-    [usersIds.join(", "), offset]
+    [offset]
   );
 
   return posts;
