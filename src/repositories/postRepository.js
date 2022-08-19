@@ -33,9 +33,27 @@ async function getLastPostByUserId(userId) {
 
 async function showPosts() {
   try {
-    return await db.query(
-      "SELECT posts.id, name, picture, description, link_title, link_description, link_image, link, posts.user_id FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.created_at DESC"
-    );
+    return await db.query(`
+    SELECT posts.id, users.name, users.picture, description, link_title, link_description, link_image, 
+	  link, posts.user_id, COUNT(shares_post.post_id)  OVER (PARTITION BY shares_post.post_id) AS countShared,
+	  us.name as nameShared, posts.created_at
+	  FROM  posts 
+	  JOIN users ON users.id = posts.user_id 
+	   JOIN shares_post ON shares_post.post_id = posts.id
+	  JOIN shares ON shares_post.share_id = shares.id
+	  FULL OUTER JOIN users us ON us.id = shares.user_id
+	  
+	  union all
+	  
+    SELECT posts.id, users.name, users.picture, description, link_title, link_description, link_image, 
+	  link, posts.user_id, COUNT(shares_post.post_id)  AS countShared,
+	 null as nameShared, posts.created_at
+	  FROM  posts 
+	  JOIN users ON users.id = posts.user_id 
+	  LEFT JOIN shares_post ON shares_post.post_id = posts.id
+	  LEFT JOIN shares ON shares_post.share_id = shares.id
+	  GROUP BY posts.id, users.id, users.name,shares_post.post_id
+    `);
   } catch (error) {
     return false;
   }
@@ -98,6 +116,17 @@ async function deletePostLikes(postId) {
   return postLikes;
 }
 
+async function deletePosts_shared(postId) {
+  return await db.query(
+    `
+    DELETE FROM shares_post
+    WHERE "post_id" = $1
+    
+    `,
+    [postId]
+  );
+}
+
 async function deletePost(postId, userId) {
   const { rows: deletePostByiD } = await db.query(
     `
@@ -125,9 +154,6 @@ async function findPostOwner(userId, postId) {
 }
 
 async function likePost(idUser, post) {
-  console.log(idUser);
-  console.log(post);
-
   try {
     return await db.query(
       "INSERT INTO likes_posts (post_id, user_id) VALUES ($1, $2)",
@@ -184,14 +210,32 @@ async function deleteComments_post(postId) {
 async function getPostsByUsersIds(usersIds, { limit = null, offset = 0 }) {
   const { rows: posts } = await db.query(
     `
-    SELECT posts.id, name, picture, description, link_title, link_description, link_image, link, posts.user_id
-    FROM posts
-    JOIN users ON users.id = posts.user_id
+    SELECT * FROM (SELECT posts.id, users.name, users.picture, description, link_title, link_description, link_image, 
+	  link, posts.user_id, COUNT(shares_post.post_id)  OVER (PARTITION BY shares_post.post_id) AS countShared,
+	  us.name as nameShared, shares.created_at
+	  FROM  posts 
+	  JOIN users ON users.id = posts.user_id 
+	   JOIN shares_post ON shares_post.post_id = posts.id
+	  JOIN shares ON shares_post.share_id = shares.id
+	  FULL OUTER JOIN users us ON us.id = shares.user_id
+    WHERE shares.user_id IN (${usersIds.join(", ")})
+	  
+	  union all
+	  
+    SELECT posts.id, users.name, users.picture, description, link_title, link_description, link_image, 
+	  link, posts.user_id, COUNT(shares_post.post_id)  AS countShared,
+	 null as nameShared, posts.created_at
+	  FROM  posts 
+	  JOIN users ON users.id = posts.user_id 
+	  LEFT JOIN shares_post ON shares_post.post_id = posts.id
+	  LEFT JOIN shares ON shares_post.share_id = shares.id
     WHERE posts.user_id IN (${usersIds.join(", ")})
-    ORDER BY posts.created_at DESC
+	  GROUP BY posts.id, users.id, users.name,shares_post.post_id) allposts
+
+    ORDER BY allposts.created_at DESC
     ${limit ? `LIMIT ${limit}` : ""}
     OFFSET $1
-  `,
+    `,
     [offset]
   );
 
@@ -212,6 +256,7 @@ const postRepository = {
   findPostOwner,
   deletePostLikes,
   getLastPostByUserId,
+  deletePosts_shared,
   deleteComments_post,
   getPostsByUsersIds,
 };

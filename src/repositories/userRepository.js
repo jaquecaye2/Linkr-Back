@@ -33,10 +33,12 @@ async function getUsersWithId(followerId, id) {
       ARRAY(
         SELECT row_to_json(posts_row)
         FROM (
-          SELECT users.name, users.picture, posts.id, posts.link, posts.description, posts.link_title, posts.link_description, posts.link_image
+          SELECT users.name, users.picture, posts.id, posts.link, posts.description, posts.link_title, posts.link_description, posts.link_image, COUNT(shares_post.post_id) AS countShared
           FROM posts
           JOIN users ON users.id = posts.user_id
+          LEFT JOIN shares_post ON shares_post.post_id = posts.id
           WHERE posts.user_id = $1
+          GROUP BY posts.id, users.id
           ORDER BY posts.created_at DESC
         ) posts_row
       ) AS posts

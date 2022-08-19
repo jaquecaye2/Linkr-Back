@@ -95,6 +95,8 @@ export async function deletePost(request, response) {
 
     await postRepository.deletePostLikes(id);
 
+    await postRepository.deletePosts_shared(id);
+
     await postRepository.deletePost(id, idUser);
 
     response.sendStatus(204);
@@ -133,6 +135,8 @@ export async function createPost(request, response) {
       },
       function (error) {
         console.log(error);
+        response.status(404).send("Erro ao cadastrar esse link");
+        return;
       }
     );
 
@@ -159,6 +163,14 @@ export async function showPosts(request, response) {
     }
 
     const { rows: posts } = await postRepository.showPosts();
+
+    posts.sort(function (a, b) {
+      if (a.created_at > b.created_at) {
+        return -1;
+      } else {
+        return true;
+      }
+    });
 
     if (posts.length === 0) {
       response.status(204).send("There are no posts yet");
@@ -268,13 +280,6 @@ export async function getPosts(req, res) {
       idUser
     );
 
-    if (followedsIdsResult.length === NO_RESULTS) {
-      res
-        .status(httpStatus.NOT_FOUND)
-        .send("You don't follow anyone yet. Search for new friends!");
-      return;
-    }
-
     const followedsIds = followedsIdsResult.map(({ followedId }) => followedId);
 
     const offset =
@@ -282,12 +287,23 @@ export async function getPosts(req, res) {
         ? (parseInt(page) - 1) * (limit || DEFAULT_LIMIT)
         : 0;
 
-    const posts = await postRepository.getPostsByUsersIds(followedsIds, {
-      offset,
-      limit,
-    });
+    const posts = await postRepository.getPostsByUsersIds(
+      [...followedsIds, idUser],
+      {
+        offset,
+        limit,
+      }
+    );
 
-    if (posts.length === NO_RESULTS) {
+    if (
+      posts.length === NO_RESULTS &&
+      followedsIdsResult.length === NO_RESULTS
+    ) {
+      res
+        .status(httpStatus.NOT_FOUND)
+        .send("You don't follow anyone yet. Search for new friends!");
+      return;
+    } else if (posts.length === NO_RESULTS) {
       res.status(httpStatus.NOT_FOUND).send("No posts found from your friends");
       return;
     }
