@@ -1,6 +1,8 @@
 import urlMetadata from "url-metadata";
 import postRepository from "../repositories/postRepository.js";
 import hastagRepository from "../repositories/hastagRepository.js";
+import userRepository from "../repositories/userRepository.js";
+import httpStatus from "../utils/httpStatus.js";
 
 function getPostHashtags(post) {
   const hashtagRegex = /#\w+/gm;
@@ -87,10 +89,13 @@ export async function deletePost(request, response) {
     if (postOwner.length === 0) {
       return response.sendStatus(401);
     }
+    await postRepository.deleteComments_post(id);
 
     await postRepository.deletePosts_hastgs(id);
 
     await postRepository.deletePostLikes(id);
+
+    await postRepository.deletePosts_shared(id);
 
     await postRepository.deletePost(id, idUser);
 
@@ -110,10 +115,10 @@ export async function createPost(request, response) {
       infoPost.description = null;
     }
 
+    let hashtags;
+
     if (infoPost.description) {
       const postHashtags = getPostHashtags(infoPost.description);
-
-      let hashtags;
 
       if (postHashtags) {
         await createHashtagsIfNotExists(postHashtags);
@@ -158,6 +163,14 @@ export async function showPosts(request, response) {
     }
 
     const { rows: posts } = await postRepository.showPosts();
+
+    posts.sort(function (a, b) {
+      if (a.created_at > b.created_at) {
+        return -1;
+      } else {
+        return true;
+      }
+    });
 
     if (posts.length === 0) {
       response.status(204).send("There are no posts yet");
@@ -249,6 +262,57 @@ export async function howManyLikes(request, response) {
   } catch (error) {
     response
       .status(500)
+      .send(
+        "An error occured while trying to fetch the posts, please refresh the page"
+      );
+  }
+}
+
+export async function getPosts(req, res) {
+  const NO_RESULTS = 0;
+  const DEFAULT_LIMIT = 10;
+
+  const { idUser } = res.locals;
+  const { page, limit } = req.query;
+
+  try {
+    const followedsIdsResult = await userRepository.getFollowedsIdsByUserId(
+      idUser
+    );
+
+    const followedsIds = followedsIdsResult.map(({ followedId }) => followedId);
+
+    const offset =
+      page && parseInt(page) > 0
+        ? (parseInt(page) - 1) * (limit || DEFAULT_LIMIT)
+        : 0;
+
+    const posts = await postRepository.getPostsByUsersIds(
+      [...followedsIds, idUser],
+      {
+        offset,
+        limit,
+      }
+    );
+
+    if (
+      posts.length === NO_RESULTS &&
+      followedsIdsResult.length === NO_RESULTS
+    ) {
+      res
+        .status(httpStatus.NOT_FOUND)
+        .send("You don't follow anyone yet. Search for new friends!");
+      return;
+    } else if (posts.length === NO_RESULTS) {
+      res.status(httpStatus.NOT_FOUND).send("No posts found from your friends");
+      return;
+    }
+
+    res.send(posts);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
       .send(
         "An error occured while trying to fetch the posts, please refresh the page"
       );

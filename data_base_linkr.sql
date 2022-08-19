@@ -63,7 +63,8 @@ CREATE TABLE "comments_post" (
 
 CREATE TABLE "shares" (
 	"id" SERIAL PRIMARY KEY,
-	"user_id" integer NOT NULL  REFERENCES "users"("id")
+	"user_id" integer NOT NULL  REFERENCES "users"("id"),
+	"created_at" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE "shares_post" (

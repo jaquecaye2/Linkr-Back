@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const user = 'postgres';
+const user = "postgres";
 const password = process.env.DB_PASSWORD;
-const host = 'localhost';
+const host = "localhost";
 const port = 5432;
-const database = 'linkr';
+const database = "linkr";
 
 const { Pool } = pg;
 
@@ -16,14 +16,14 @@ const configDatabase = {
   password,
   host,
   port,
-  database
+  database,
 };
 
- if(process.env.MODE === "PROD") {
+if (process.env.MODE === "PROD") {
   configDatabase.ssl = {
-    rejectUnauthorized: false
-  }
-} 
+    rejectUnauthorized: false,
+  };
+}
 
 const db = new Pool(configDatabase);
 export default db;

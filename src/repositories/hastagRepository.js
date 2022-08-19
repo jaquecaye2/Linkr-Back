@@ -7,12 +7,14 @@ async function findHastag(hastag) {
 async function redirectHastag(hastag) {
   return db.query(
     `
-    SELECT u.name, u.id AS user_id, u.picture, p.link, p.link_title, p.link_description, p.link_image, p.id as post_id, p.description, p.created_at , h.name AS hastag
+    SELECT u.name, u.id AS user_id, u.picture, p.link, p.link_title, p.link_description, p.link_image, p.id as post_id, p.description, p.created_at , h.name AS hastag, COUNT(shares_post.post_id) AS countShared
     FROM  posts_hastgs pt
     JOIN posts p ON p.id = pt.post_id
     JOIN users u ON p.user_id = u.id
     JOIN hastags h ON h.id = pt.hastag_id
+    LEFT JOIN shares_post ON shares_post.post_id = P.id
     WHERE h.name ILIKE $1
+    GROUP BY P.id, u.id, h.name
     ORDER BY p.id DESC LIMIT 20
   `,
     [`%${hastag}%`]
